@@ -1,3 +1,3 @@
-Proiect Dezvoltarea Aplicatiilor Web 2025
+Proiect Dezvoltarea Aplicațiilor Web 2025
 
-Tema proiectului: Magazin online
+Tema proiectului: Platformă “Online Shop”
