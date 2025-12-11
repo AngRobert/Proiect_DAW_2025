@@ -40,8 +40,7 @@ namespace Proiect_DAW_2025.Models
         public virtual ICollection<FAQ> FAQs { get; set; } = [];
 
         [NotMapped]
-        public double Score =>
-        (Reviews == null || Reviews.Count == 0) ? 0 : Reviews.Average(r => r.Rating ?? 0);
+        public double Score = 0;
 
         [NotMapped]
         public IEnumerable<SelectListItem> Categ { get; set; } = Enumerable.Empty<SelectListItem>();
