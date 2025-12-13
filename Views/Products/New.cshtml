@@ -1,0 +1,70 @@
+﻿@model Proiect_DAW_2025.Models.Product
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h3 class="card-title mb-4 text-center">
+                        Add New Product
+                    </h3>
+
+                    <form asp-controller="Products" asp-action="New" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label"> Titlu </label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"> Descriere </label>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label"> Pret </label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Stock" class="form-label"> Stoc </label>
+                            <input asp-for="Stock" class="form-control" />
+                            <span asp-validation-for="Stock" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="CategoryId" class="form-label"> Categorie </label>
+                            <select asp-for="CategoryId"
+                                    asp-items="Model.Categ"
+                                    class="form-select">
+                                <option value=""> Selecteaza categoria </option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                Adauga
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
