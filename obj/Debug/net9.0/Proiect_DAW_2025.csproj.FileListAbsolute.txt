@@ -226,7 +226,6 @@ C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\nezrqnk58p-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\v0zgfp0y55-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\yfc7ypekbg-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\onlnf8tcny-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\kze9y79wxy-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\kkfsw8o1nh-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\gezpdlk4ez-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -819,3 +818,4 @@ C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\refint\Proiect_DAW
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\Proiect_DAW_2025.pdb
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\Proiect_DAW_2025.genruntimeconfig.cache
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\ref\Proiect_DAW_2025.dll
+C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\onlnf8tcny-{0}-co6dyjyk5t-co6dyjyk5t.gz

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,12 +36,30 @@ namespace Proiect_DAW_2025.Models
 
         public virtual ApplicationUser? Collaborator { get; set; }
 
-        public virtual ICollection<Review> Reviews { get; set; } = [];
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-        public virtual ICollection<FAQ> FAQs { get; set; } = [];
+        public virtual ICollection<FAQ> FAQs { get; set; } = new List<FAQ>();
 
         [NotMapped]
         public double Score = 0;
+
+
+        public double CalculateScore() {
+            if (Reviews == null || !Reviews.Any())
+                return 0;
+
+            double s = 0;
+            int count = 0;
+            foreach (var r in Reviews) {
+                if (r.Rating != null) {
+                    s += (double)r.Rating;
+                    count += 1;
+                }
+            }
+
+            return (s / Reviews.Count());
+        }
+
 
         [NotMapped]
         public IEnumerable<SelectListItem> Categ { get; set; } = Enumerable.Empty<SelectListItem>();
