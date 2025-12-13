@@ -2,6 +2,20 @@
 <br />
 
 <div class="container my-4">
+
+    @if (ViewBag.GoodMsg != null) {
+
+        <div class="alert alert-success" role="alert">
+            @ViewBag.GoodMsg
+        </div>
+    }
+    else if (ViewBag.BadMsg != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.BadMsg
+        </div>
+    }
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
 
         @foreach (var p in ViewBag.Products) {
@@ -9,7 +23,7 @@
                 <div class="card h-100 product-card">
 
                     <div class="d-flex align-items-center justify-content-center p-3">
-                        <img src="~/Images/placeholder.jpg"
+                        <img src="~/Images/placeholder2.png"
                              class="img-fluid product-img"
                              alt="Product image" />
                     </div>

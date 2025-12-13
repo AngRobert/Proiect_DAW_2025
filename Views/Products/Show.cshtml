@@ -3,19 +3,44 @@
 <div class="container my-4">
 
     <div class="row">
-
         <div class="col-md-5 text-center">
-            <img src="~/Images/placeholder.jpg"
+            <img src="~/Images/placeholder2.png"
                  class="img-fluid rounded border"
                  alt="@Model.Title" />
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-7 position-relative">
+
+            @if (User.IsInRole("Admin") ||
+                        (User.IsInRole("Colaborator") &&
+                        Model.CollaboratorId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)) {
+                <!-- ACTION BUTTONS -->
+                <div class="position-absolute top-0 end-0 d-flex flex-column gap-2">
+
+                    <a asp-controller="Products"
+                       asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-secondary btn-sm">
+                        ✏️ Edit Product
+                    </a>
+
+                    <form method="post"
+                          asp-controller="Products"
+                          asp-action="Delete"
+                          asp-route-id="@Model.Id">
+                        <button type="submit"
+                                class="btn btn-outline-danger btn-sm">
+                            🗑️ Delete Product
+                        </button>
+                    </form>
+
+                </div>
+            }
 
             <h2 class="fw-bold">@Model.Title</h2>
 
             <div class="mb-2 text-warning">
-                @ViewBag.Score 
+                @ViewBag.Score
             </div>
 
             <p class="mt-3">
@@ -49,14 +74,24 @@
 
     <hr class="my-4" />
 
-    <h5>Comments</h5>
+    <!-- REVIEWS -->
+    <h5>Reviews</h5>
 
     @if (Model.Reviews != null && Model.Reviews.Any()) {
         @foreach (var comm in Model.Reviews) {
-            <div class="border rounded p-3 mb-3">
+            <div class="border rounded p-3 mb-3 position-relative">
 
-                <p class="mb-1">@comm.Rating</p>
-                <p class="mb-1">@comm.Text</p>
+                <small class="text-muted position-absolute top-0 end-0 m-2">
+                    @comm.User.UserName
+                </small>
+
+                <p class="mb-1 fw-bold">
+                    Rating: @comm.Rating
+                </p>
+
+                <p class="mb-1">
+                    @comm.Text
+                </p>
 
                 <small class="text-muted">
                     @comm.Date.ToString("dd MMM yyyy")
@@ -71,17 +106,19 @@
 
     <hr />
 
+    <!-- FAQ -->
+    <h5>FAQs</h5>
+
     @if (Model.FAQs != null && Model.FAQs.Any()) {
         @foreach (var q in Model.FAQs) {
             <div class="border rounded p-3 mb-3">
-
-                <p class="mb-1">@q.Text</p>
+                <p class="mb-1 fw-bold">@q.Text</p>
                 <p class="mb-1">@q.Answer</p>
-
             </div>
         }
     }
     else {
         <p class="text-muted">No questions yet.</p>
     }
+
 </div>

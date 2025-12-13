@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Proiect_DAW_2025")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3dacb0f78e0586a96aa0fac3376e380d5e7cede")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc43dbf047039b5ce5762bf9b57311d947e93a88")]
 [assembly: System.Reflection.AssemblyProductAttribute("Proiect_DAW_2025")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Proiect_DAW_2025")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
