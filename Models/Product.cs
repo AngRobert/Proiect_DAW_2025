@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,7 +11,7 @@ namespace Proiect_DAW_2025.Models
 
         [Required(ErrorMessage = "Titlul este obligatoriu")]
         [StringLength(100, ErrorMessage = "Titlul nu poate avea mai mult de 100 de caractere")]
-        [MinLength(5, ErrorMessage = "Titlul trebuie sa aibă mai mult de 5 caractere")]
+        [MinLength(5, ErrorMessage = "Titlul trebuie să aibă mai mult de 5 caractere")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Descrierea produsului este obligatorie")]

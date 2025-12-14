@@ -1,0 +1,44 @@
+﻿@model Proiect_DAW_2025.Models.Category
+
+
+@{
+    ViewBag.Title = "Adăugare categorie";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h3 class="card-title mb-4 text-center">
+                        Adaugă o categorie
+                    </h3>
+
+                    <form asp-action="New" asp-controller="Categories" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="CategoryName" class="form-label"> Denumire categorie </label>
+                            <input asp-for="CategoryName" class="form-control" />
+                            <span asp-validation-for="CategoryName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                Anulează
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                Adaugă
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

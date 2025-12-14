@@ -1,5 +1,9 @@
 ﻿@model Proiect_DAW_2025.Models.Product
 
+@{
+    ViewBag.Title = "Adăugare produs";
+}
+
 <div class="container mt-5">
     <div class="row justify-content-center">
 
@@ -9,10 +13,12 @@
                 <div class="card-body">
 
                     <h3 class="card-title mb-4 text-center">
-                        Add New Product
+                        Adaugă un produs
                     </h3>
 
                     <form asp-controller="Products" asp-action="New" method="post">
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
                         <div class="mb-3">
                             <label asp-for="Title" class="form-label"> Titlu </label>
@@ -29,7 +35,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Price" class="form-label"> Pret </label>
+                            <label asp-for="Price" class="form-label"> Preț </label>
                             <input asp-for="Price" class="form-control" />
                             <span asp-validation-for="Price" class="text-danger small"></span>
                         </div>
@@ -45,18 +51,18 @@
                             <select asp-for="CategoryId"
                                     asp-items="Model.Categ"
                                     class="form-select">
-                                <option value=""> Selecteaza categoria </option>
+                                <option value=""> Selectează categoria </option>
                             </select>
                             <span asp-validation-for="CategoryId" class="text-danger small"></span>
                         </div>
 
                         <div class="d-flex justify-content-between">
                             <a asp-action="Index" class="btn btn-outline-secondary">
-                                Cancel
+                                Anulează
                             </a>
 
                             <button type="submit" class="btn btn-primary px-4">
-                                Adauga
+                                Adaugă
                             </button>
                         </div>
 
