@@ -9,10 +9,13 @@
                 <div class="card-body">
 
                     <h3 class="card-title mb-4 text-center">
-                        Editeaza Un Produs
+                        Editează produs
                     </h3>
 
                     <form asp-controller="Products" asp-action="Edit" asp-controller="Products" asp-route-id="@Model.Id" method="post">
+                        
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
 
                         <div class="mb-3">
                             <label asp-for="Title" class="form-label"> Titlu </label>
@@ -46,18 +49,18 @@
                             <select asp-for="CategoryId"
                                     asp-items="Model.Categ"
                                     class="form-select">
-                                <option value=""> Selecteaza categoria </option>
+                                <option value=""> Selectează categoria </option>
                             </select>
                             <span asp-validation-for="CategoryId" class="text-danger small"></span>
                         </div>
 
                         <div class="d-flex justify-content-between">
                             <a asp-action="Index" class="btn btn-outline-secondary">
-                                Cancel
+                                Anulează
                             </a>
 
                             <button type="submit" class="btn btn-primary px-4">
-                                Adauga
+                                Modifică
                             </button>
                         </div>
 

@@ -743,7 +743,6 @@ C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\a3ygkwa
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\nezrqnk58p-muycvpuwrr.gz
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\v0zgfp0y55-87fc7y1x7t.gz
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\yfc7ypekbg-mlv21k5csn.gz
-C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\084nzhduhg-b9sayid5wm.gz
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\i7809efq41-61n19gt1b8.gz
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\br9yyye6u2-xtxxf3hu2r.gz
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\9jainvzha5-t1cqhe9u97.gz
@@ -819,3 +818,4 @@ C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\Proiect_DAW_2025.p
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\Proiect_DAW_2025.genruntimeconfig.cache
 C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\ref\Proiect_DAW_2025.dll
 C:\Users\tinoa\source\repos\DAW\Proiect_DAW_2025\Proiect_DAW_2025\obj\Debug\net9.0\compressed\onlnf8tcny-{0}-co6dyjyk5t-co6dyjyk5t.gz
+C:\Users\windo\source\repos\Proiect_DAW_2025\obj\Debug\net9.0\compressed\084nzhduhg-co6dyjyk5t.gz

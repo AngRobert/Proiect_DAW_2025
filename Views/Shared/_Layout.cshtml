@@ -16,7 +16,7 @@
             <div class="container-fluid">
 
                 <a class="navbar-brand" asp-controller="Products" asp-action="Index">
-                    DAWShop
+                    OnlineShop
                 </a>
 
                 <button class="navbar-toggler" type="button"
@@ -36,12 +36,42 @@
                             </a>
                         </li>
 
-                        @if (User.IsInRole("Admin") || User.IsInRole("Colaborator")) {
+
+
+                        @if (User.IsInRole("Admin")) 
+                        {
                             <li class="nav-item">
                                 <a class="nav-link"
                                    asp-controller="Products"
                                    asp-action="New">
-                                    Adaugare produs
+                                    Adăugare produs
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Categories"
+                                   asp-action="Index">
+                                    Afișare categorii
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Categories"
+                                   asp-action="New">
+                                    Adăugare categorie
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Colaborator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-controller="Products"
+                                   asp-action="New">
+                                    Adăugare produs
                                 </a>
                             </li>
                         }

@@ -14,14 +14,14 @@
             @if (User.IsInRole("Admin") ||
                         (User.IsInRole("Colaborator") &&
                         Model.CollaboratorId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)) {
-                <!-- ACTION BUTTONS -->
+
                 <div class="position-absolute top-0 end-0 d-flex flex-column gap-2">
 
                     <a asp-controller="Products"
                        asp-action="Edit"
                        asp-route-id="@Model.Id"
                        class="btn btn-outline-secondary btn-sm">
-                        ✏️ Edit Product
+                        ✏️ Editează produs
                     </a>
 
                     <form method="post"
@@ -30,7 +30,7 @@
                           asp-route-id="@Model.Id">
                         <button type="submit"
                                 class="btn btn-outline-danger btn-sm">
-                            🗑️ Delete Product
+                            🗑️ Șterge produs
                         </button>
                     </form>
 
@@ -54,7 +54,7 @@
                       asp-action="Add"
                       asp-route-id="@Model.Id">
                     <button class="btn btn-primary px-4">
-                        🛒 Add to Cart
+                        🛒 Adaugă în coș
                     </button>
                 </form>
 
@@ -63,7 +63,7 @@
                       asp-action="Add"
                       asp-route-id="@Model.Id">
                     <button class="btn btn-outline-danger px-4">
-                        ♥ Add to Wishlist
+                        ♥ Adaugă în wishlist
                     </button>
                 </form>
 
@@ -74,27 +74,26 @@
 
     <hr class="my-4" />
 
-    <!-- REVIEWS -->
     <h5>Reviews</h5>
 
     @if (Model.Reviews != null && Model.Reviews.Any()) {
-        @foreach (var comm in Model.Reviews) {
+        @foreach (var rev in Model.Reviews) {
             <div class="border rounded p-3 mb-3 position-relative">
 
                 <small class="text-muted position-absolute top-0 end-0 m-2">
-                    @comm.User.UserName
+                    @rev.User.UserName
                 </small>
 
                 <p class="mb-1 fw-bold">
-                    Rating: @comm.Rating
+                    Rating: @rev.Rating
                 </p>
 
                 <p class="mb-1">
-                    @comm.Text
+                    @rev.Text
                 </p>
 
                 <small class="text-muted">
-                    @comm.Date.ToString("dd MMM yyyy")
+                    @rev.Date.ToString("dd MMM yyyy")
                 </small>
 
             </div>
@@ -106,7 +105,6 @@
 
     <hr />
 
-    <!-- FAQ -->
     <h5>FAQs</h5>
 
     @if (Model.FAQs != null && Model.FAQs.Any()) {

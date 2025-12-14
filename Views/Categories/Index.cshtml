@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Listă categorii";
+}
+
+<br />
+<br />
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+<div class="container my-4">
+
+
+@if (ViewBag.Message != null)
+{
+
+    <h2 class="alert alert-success p-3 rounded-3 text-center mb-5">@ViewBag.Message</h2>
+}
+
+
+<br />
+<br />
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
+
+
+        @foreach (Proiect_DAW_2025.Models.Category category in ViewBag.Categories)
+        {
+                    <div class="col">
+                        <div class="card h-100 product-card">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">@category.CategoryName</h6>
+
+                                <a asp-controller="Categories"
+                                   asp-action="Show"
+                                   asp-route-id="@category.Id"
+                                   class="btn btn-primary mt-2">
+
+                                    Afișează categoria
+                                </a>
+
+                                <a asp-controller="Categories"
+                                   asp-action="Edit"
+                                   asp-route-id="@category.Id"
+                                   class="btn btn-primary mt-2">
+
+                                    Editează categoria
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+        }
+
+    </div>
+</div>
+
+<br />
+<a class="btn btn-success" asp-controller="Categories" asp-action="New">Adaugă o nouă categorie</a>
+<br />
+

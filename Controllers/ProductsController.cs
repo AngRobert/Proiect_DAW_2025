@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,7 +8,7 @@ using Proiect_DAW_2025.Models;
 
 namespace Proiect_DAW_2025.Controllers {
     public class ProductsController : Controller {
-        // partea de identity si baza de date
+
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -33,16 +32,20 @@ namespace Proiect_DAW_2025.Controllers {
                 ViewBag.BadMsg = TempData["badMessage"];
             }
 
-                return View();
+            return View();
         }
 
         public IActionResult Show(int id) {
-            Product? product = db.Products.Include(p => p.Category).Include(p => p.Collaborator).
-                Include(p => p.Reviews).ThenInclude(r => r.User).
-                Where(p => p.Id == id).FirstOrDefault();
+            Product? product = db.Products
+                                 .Include(p => p.Category)
+                                 .Include(p => p.Collaborator)
+                                 .Include(p => p.Reviews)
+                                    .ThenInclude(r => r.User)
+                                 .Where(p => p.Id == id)
+                                 .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu exista!";
+                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -50,7 +53,7 @@ namespace Proiect_DAW_2025.Controllers {
             return View(product);
         }
 
-        [Authorize(Roles = "Colaborator, Admin")]
+        [Authorize(Roles = "Colaborator,Admin")]
         [HttpGet]
         public IActionResult New() {
             Product product = new Product();
@@ -60,16 +63,16 @@ namespace Proiect_DAW_2025.Controllers {
             return View(product);
         }
 
-        [Authorize(Roles = "Colaborator, Admin")]
+        [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
         public IActionResult New(Product product) {
 
             product.CollaboratorId = _userManager.GetUserId(User);
 
             if (ModelState.IsValid) {
-                db.Add(product);
+                db.Products.Add(product);
                 db.SaveChanges();
-                TempData["goodMessage"] = "Produsul a fost adaugat cu succes!";
+                TempData["goodMessage"] = "Produsul a fost adăugat cu succes!";
                 return RedirectToAction("Index");
             }
             else {
@@ -78,18 +81,21 @@ namespace Proiect_DAW_2025.Controllers {
             }
         }
 
-        [Authorize(Roles = "Colaborator, Admin")]
+        [Authorize(Roles = "Colaborator,Admin")]
         [HttpGet]
         public IActionResult Edit(int id) {
-            Product? product = db.Products.Include(p => p.Category).Where(p => p.Id == id).FirstOrDefault();
+            Product? product = db.Products
+                                 .Include(p => p.Category)
+                                 .Where(p => p.Id == id)
+                                 .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu exista!";
+                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
                 return RedirectToAction("Index");
             }
 
             if (product.CollaboratorId != _userManager.GetUserId(User) && !User.IsInRole("Admin")) {
-                TempData["badMessage"] = "Nu poti edita un produs care nu iti apartine!";
+                TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
                 return RedirectToAction("Index");
             }
 
@@ -98,13 +104,13 @@ namespace Proiect_DAW_2025.Controllers {
             return View(product);
         }
 
-        [Authorize(Roles = "Colaborator, Admin")]
+        [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
         public IActionResult Edit(int id, Product requestProduct) {
             Product? originalProduct = db.Products.Find(id);
 
             if (originalProduct is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu exista!";
+                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -120,33 +126,38 @@ namespace Proiect_DAW_2025.Controllers {
                     return RedirectToAction("Index");
                 }
                 else {
-                    TempData["badMessage"] = "Nu poti edita un produs care nu iti apartine!";
+                    TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
                     return RedirectToAction("Index");
                 }
             }
             else {
-                originalProduct.Categ = GetAllCategories();
-                return View(originalProduct);
+                requestProduct.Categ = GetAllCategories();
+                return View(requestProduct);
             }
             
         }
+
+        [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
         public IActionResult Delete(int id) {
-            Product? product = db.Products.Include(p => p.Reviews).Where(p => p.Id == id).FirstOrDefault();
+            Product? product = db.Products
+                                 .Include(p => p.Reviews)
+                                 .Where(p => p.Id == id)
+                                 .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu exista!";
+                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
                 return RedirectToAction("Index");
             }
 
             if (User.IsInRole("Admin") || product.CollaboratorId == _userManager.GetUserId(User)) {
-                db.Remove(product);
-                TempData["goodMessage"] = "Produsul a fost sters cu succes!";
+                db.Products.Remove(product);
+                TempData["goodMessage"] = "Produsul a fost șters cu succes!";
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            TempData["badMessage"] = "Nu poti sterge un produs care nu iti apartine!";
+            TempData["badMessage"] = "Nu poți șterge un produs care nu îți aparține!";
             return RedirectToAction("Index");
         }
 

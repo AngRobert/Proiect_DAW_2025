@@ -1,0 +1,21 @@
+﻿@model Proiect_DAW_2025.Models.Category
+@{
+    ViewBag.Title = "Afișare categorie";
+}
+
+<div class="container my-4">
+
+        <h3>@ViewBag.Title</h3>
+
+
+        <p>@Model.CategoryName</p>
+
+
+        <form method="post" asp-controller="Categories" asp-action="Delete"
+              asp-route-id="@Model.Id">
+
+            <button class="btn btn-danger" type="submit">Șterge categoria</button>
+
+        </form>
+
+</div>
