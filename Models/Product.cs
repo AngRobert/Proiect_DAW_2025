@@ -48,15 +48,13 @@ namespace Proiect_DAW_2025.Models
                 return 0;
 
             double s = 0;
-            int count = 0;
             foreach (var r in Reviews) {
                 if (r.Rating != null) {
                     s += (double)r.Rating;
-                    count += 1;
                 }
             }
 
-            return (s / Reviews.Count());
+            return (s / Reviews.Count);
         }
 
 

@@ -20,6 +20,7 @@ namespace Proiect_DAW_2025.Controllers
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
+                ViewBag.Alert = TempData["messageType"];
             }
 
             var categories = from category in db.Categories
@@ -36,6 +37,7 @@ namespace Proiect_DAW_2025.Controllers
             if (category is null)
             {
                 TempData["message"] = "Categoria nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");            
             }
 
@@ -56,14 +58,15 @@ namespace Proiect_DAW_2025.Controllers
 
             if (categoryExists)
             {
-                ModelState.AddModelError("CategoryName", "Această denumire de categorie există deja.");
+                ModelState.AddModelError("CategoryName", "Această denumire de categorie există deja!");
             }
 
             if (ModelState.IsValid)
             {
                 db.Categories.Add(cat);
                 await db.SaveChangesAsync();
-                TempData["message"] = "Categoria a fost adăugată";
+                TempData["message"] = "Categoria a fost adăugată!";
+                TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
 
@@ -77,6 +80,7 @@ namespace Proiect_DAW_2025.Controllers
             if (category is null)
             {
                 TempData["message"] = "Categoria nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
@@ -91,6 +95,7 @@ namespace Proiect_DAW_2025.Controllers
             if (category is null)
             {
                 TempData["message"] = "Categoria nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
@@ -98,7 +103,7 @@ namespace Proiect_DAW_2025.Controllers
 
             if (categoryExists)
             {
-                ModelState.AddModelError("CategoryName", "Această denumire de categorie există deja.");
+                ModelState.AddModelError("CategoryName", "Această denumire de categorie există deja!");
             }
 
             if (ModelState.IsValid)
@@ -106,6 +111,7 @@ namespace Proiect_DAW_2025.Controllers
                 category.CategoryName = requestCategory.CategoryName;
                 db.SaveChanges();
                 TempData["message"] = "Categoria a fost modificată!";
+                TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
             else
@@ -126,13 +132,15 @@ namespace Proiect_DAW_2025.Controllers
             if (category is null)
             {
                 TempData["message"] = "Categoria nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
             else
             {
                 db.Categories.Remove(category);
                 db.SaveChanges();
-                TempData["message"] = "Categoria a fost ștearsă";
+                TempData["message"] = "Categoria a fost ștearsă!";
+                TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
         }

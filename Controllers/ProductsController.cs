@@ -45,7 +45,7 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
+                TempData["badMessage"] = "Produsul nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -90,7 +90,7 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
+                TempData["badMessage"] = "Produsul nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -110,7 +110,7 @@ namespace Proiect_DAW_2025.Controllers {
             Product? originalProduct = db.Products.Find(id);
 
             if (originalProduct is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
+                TempData["badMessage"] = "Produsul nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -146,7 +146,7 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Articolul cu id-ul " + id + " nu există!";
+                TempData["badMessage"] = "Produsul nu există!";
                 return RedirectToAction("Index");
             }
 
@@ -159,6 +159,41 @@ namespace Proiect_DAW_2025.Controllers {
 
             TempData["badMessage"] = "Nu poți șterge un produs care nu îți aparține!";
             return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "User,Colaborator,Admin")]
+        [HttpPost]
+        public IActionResult Show([FromForm] Review review)
+        {
+            review.Date = DateTime.Now;
+
+            review.UserId = _userManager.GetUserId(User);
+
+            if (ModelState.IsValid)
+            {
+                db.Reviews.Add(review);
+                db.SaveChanges();
+                return Redirect("/Products/Show/" + review.ProductId);
+            }
+            else
+            {
+                Product? product = db.Products
+                                .Include(a => a.Category)
+                                .Include(a => a.Reviews)
+                                   .ThenInclude(c => c.User)
+                                 .Include(a => a.Collaborator)
+                                .Where(product => product.Id == review.ProductId)
+                                .FirstOrDefault();
+
+                if (product is null)
+                {
+                    TempData["badMessage"] = "Produsul nu există!";
+                    return RedirectToAction("Index");
+                }
+
+                return View(product);
+            }
+
         }
 
         [NonAction]
