@@ -1,0 +1,30 @@
+﻿@model Proiect_DAW_2025.Models.Review
+
+
+<h2>Editare recenzie</h2>
+<br />
+
+
+<form asp-action="Edit" asp-controller="Reviews" asp-route-id="@Model.Id" method="post">
+
+    <div class="form-group">
+        <label asp-for="Text" class="form-label">Text recenzie</label>
+        <br />
+        <textarea asp-for="Text" class="form-control"></textarea>
+        <span asp-validation-for="Text" class="text-danger small"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Rating" class="form-label"> Rating </label>
+        <br />
+        <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger small"></span>
+    </div>
+
+    <br /><br />
+
+    <button class="btn btn-primary" type="submit">Editează recenzia</button>
+
+</form>
+
+
