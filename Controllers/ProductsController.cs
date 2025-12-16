@@ -5,17 +5,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
+using System.Threading.Tasks;
 
 namespace Proiect_DAW_2025.Controllers {
     public class ProductsController : Controller {
 
         private readonly ApplicationDbContext db;
+        private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager) {
+            RoleManager<IdentityRole> roleManager, IWebHostEnvironment env) {
             db = context;
+            _env = env;
             _userManager = userManager;
             _roleManager = roleManager;
         }
@@ -65,21 +68,48 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public IActionResult New(Product product) {
-
+        public async Task<IActionResult> New(Product product, IFormFile Image) {
             product.CollaboratorId = _userManager.GetUserId(User);
 
-            if (ModelState.IsValid) {
-                db.Products.Add(product);
-                db.SaveChanges();
-                TempData["goodMessage"] = "Produsul a fost adăugat cu succes!";
-                return RedirectToAction("Index");
+            if (Image != null && Image.Length > 0) {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                var fileExtension = Path.GetExtension(Image.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension)) {
+                    ModelState.AddModelError(
+                        "Image",
+                        "Fișierul trebuie să fie o imagine (.jpg, .jpeg, .png, .webp)"
+                    );
+
+                    product.Categ = GetAllCategories();
+                    return View(product);
+                }
+
+                var fileName = Guid.NewGuid() + fileExtension;
+
+                var storagePath = Path.Combine(_env.WebRootPath, "Images", fileName);
+                var databaseFileName = "/Images/" + fileName;
+
+                using (var fileStream = new FileStream(storagePath, FileMode.Create)) {
+                    await Image.CopyToAsync(fileStream);
+                }
+
+                product.Image = databaseFileName;
+                ModelState.Remove(nameof(product.Image));
             }
-            else {
+
+            if (!TryValidateModel(product)) {
                 product.Categ = GetAllCategories();
                 return View(product);
             }
+
+            db.Products.Add(product);
+            db.SaveChanges();
+
+            TempData["goodMessage"] = "Produsul a fost adăugat cu succes!";
+            return RedirectToAction("Index");
         }
+
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpGet]
@@ -106,36 +136,70 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public IActionResult Edit(int id, Product requestProduct) {
-            Product? originalProduct = db.Products.Find(id);
+        public async Task<IActionResult> Edit(int id, Product requestProduct, IFormFile Image) {
+            var originalProduct = db.Products.Find(id);
 
-            if (originalProduct is null) {
+            if (originalProduct == null) {
                 TempData["badMessage"] = "Produsul nu există!";
                 return RedirectToAction("Index");
             }
 
-            if (ModelState.IsValid) {
-                if (User.IsInRole("Admin") || originalProduct.CollaboratorId == _userManager.GetUserId(User)) {
-                    originalProduct.Title = requestProduct.Title;
-                    originalProduct.Price = requestProduct.Price;
-                    originalProduct.Stock = requestProduct.Stock;
-                    originalProduct.CategoryId = requestProduct.CategoryId;
-                    originalProduct.Description = requestProduct.Description;
-                    TempData["goodMessage"] = "Produsul a fost modificat cu succes!";
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else {
-                    TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
-                    return RedirectToAction("Index");
-                }
+            if (!User.IsInRole("Admin") &&
+                originalProduct.CollaboratorId != _userManager.GetUserId(User)) {
+                TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
+                return RedirectToAction("Index");
             }
-            else {
+
+            originalProduct.Title = requestProduct.Title;
+            originalProduct.Price = requestProduct.Price;
+            originalProduct.Stock = requestProduct.Stock;
+            originalProduct.CategoryId = requestProduct.CategoryId;
+            originalProduct.Description = requestProduct.Description;
+
+            if (Image != null && Image.Length > 0) {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                var fileExtension = Path.GetExtension(Image.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension)) {
+                    ModelState.AddModelError("Image",
+                        "Fișierul trebuie să fie o imagine (.jpg, .jpeg, .png, .webp)");
+
+                    requestProduct.Categ = GetAllCategories();
+                    return View(requestProduct);
+                }
+
+                if (!string.IsNullOrEmpty(originalProduct.Image)) {
+                    var oldPath = Path.Combine(
+                        _env.WebRootPath,
+                        originalProduct.Image.TrimStart('/')
+                    );
+
+                    if (System.IO.File.Exists(oldPath)) {
+                        System.IO.File.Delete(oldPath);
+                    }
+                }
+
+                var fileName = Guid.NewGuid() + fileExtension;
+                var storagePath = Path.Combine(_env.WebRootPath, "Images", fileName);
+                var databaseFileName = "/Images/" + fileName;
+
+                using var fileStream = new FileStream(storagePath, FileMode.Create);
+                await Image.CopyToAsync(fileStream);
+
+                originalProduct.Image = databaseFileName;
+                ModelState.Remove(nameof(originalProduct.Image));   
+            }
+
+            if (!TryValidateModel(originalProduct)) {
                 requestProduct.Categ = GetAllCategories();
                 return View(requestProduct);
             }
-            
+
+            db.SaveChanges();
+            TempData["goodMessage"] = "Produsul a fost modificat cu succes!";
+            return RedirectToAction("Index");
         }
+
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]

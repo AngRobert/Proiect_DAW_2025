@@ -29,6 +29,8 @@ namespace Proiect_DAW_2025.Models
         [Required(ErrorMessage = "Categoria este obligatorie")]
         public int? CategoryId { get; set; }
 
+        public string? Image { get; set; }
+
         public virtual Category? Category { get; set; }
 
         public string? CollaboratorId { get; set; }

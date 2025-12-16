@@ -12,7 +12,7 @@
                         Editează produs
                     </h3>
 
-                    <form asp-controller="Products" asp-action="Edit" asp-controller="Products" asp-route-id="@Model.Id" method="post">
+                    <form asp-controller="Products" enctype="multipart/form-data" asp-action="Edit" asp-controller="Products" asp-route-id="@Model.Id" method="post">
                         
                         <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -30,6 +30,14 @@
                                       rows="4" 
                                       value="@Model.Description"></textarea>
                             <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label"> Încarcă Imaginea </label>
+                            <input asp-for="Image" type="file"
+                                   class="form-control"
+                                   rows="4"></input>
+                            <span asp-validation-for="Image" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
