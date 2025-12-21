@@ -52,7 +52,7 @@ namespace Proiect_DAW_2025.Controllers {
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Score = product.CalculateScore();
+            product.Rating = product.CalculateScore();
             return View(product);
         }
 
@@ -255,9 +255,10 @@ namespace Proiect_DAW_2025.Controllers {
                     return RedirectToAction("Index");
                 }
 
+                product.Rating = product.CalculateScore();
+
                 return View(product);
             }
-
         }
 
         [NonAction]

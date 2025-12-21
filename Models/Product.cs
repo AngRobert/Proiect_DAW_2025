@@ -42,7 +42,7 @@ namespace Proiect_DAW_2025.Models
         public virtual ICollection<FAQ> FAQs { get; set; } = new List<FAQ>();
 
         [NotMapped]
-        public double Score = 0;
+        public double Rating = 0;
 
 
         public double CalculateScore() {
@@ -50,13 +50,20 @@ namespace Proiect_DAW_2025.Models
                 return 0;
 
             double s = 0;
+            int count = 0;
+
             foreach (var r in Reviews) {
                 if (r.Rating != null) {
                     s += (double)r.Rating;
+                    count++;
                 }
             }
 
-            return (s / Reviews.Count);
+            if (count == 0) {
+                return 0;
+            }
+
+            return Math.Round(s / count, 2);
         }
 
 
