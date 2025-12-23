@@ -88,13 +88,12 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public async Task<IActionResult> New(Product product, IFormFile Image) 
-        {
+        public async Task<IActionResult> New(Product product, IFormFile? ImageFile) {
             product.CollaboratorId = _userManager.GetUserId(User);
 
-            if (Image != null && Image.Length > 0) {
+            if (ImageFile != null && ImageFile.Length > 0) {
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-                var fileExtension = Path.GetExtension(Image.FileName).ToLower();
+                var fileExtension = Path.GetExtension(ImageFile.FileName).ToLower();
 
                 if (!allowedExtensions.Contains(fileExtension)) {
                     ModelState.AddModelError(
@@ -112,11 +111,15 @@ namespace Proiect_DAW_2025.Controllers {
                 var databaseFileName = "/Images/" + fileName;
 
                 using (var fileStream = new FileStream(storagePath, FileMode.Create)) {
-                    await Image.CopyToAsync(fileStream);
+                    await ImageFile.CopyToAsync(fileStream);
                 }
+               
 
                 product.Image = databaseFileName;
-                ModelState.Remove(nameof(product.Image));
+            }
+            else {
+                ModelState.AddModelError("Image",
+                    "Imaginea este obligatorie!");
             }
 
             if (!TryValidateModel(product)) {
@@ -158,8 +161,7 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Product requestProduct, IFormFile Image) 
-        {
+        public async Task<IActionResult> Edit(int id, Product requestProduct, IFormFile? Image) {
             var originalProduct = db.Products.Find(id);
 
             if (originalProduct == null) {
