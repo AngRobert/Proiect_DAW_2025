@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Proiect_DAW_2025.Models.WishlistItem>
+
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">💖 Wishlist-ul tău</h2>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert @ViewBag.Alert" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-heartbreak display-1 text-muted"></i>
+            <p class="mt-3 fs-4 text-muted">Lista ta este goală.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary mt-2">Vezi produse</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 product-card">
+
+                        <div class="d-flex align-items-center justify-content-center p-3">
+                            <img src="@item.Product.Image" class="img-fluid product-img" alt="@item.Product.Title" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">@item.Product.Title</h6>
+                            <div class="mt-auto fw-bold text-danger fs-5">
+                                @item.Product.Price Lei
+                            </div>
+
+                            @if (item.Product.Stock > 0)
+                            {
+                                <span class="badge bg-success mb-2 align-self-start">În stoc</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger mb-2 align-self-start">Stoc epuizat</span>
+                            }
+
+                            <div class="mt-auto d-flex gap-2">
+                                <form asp-controller="Cart" asp-action="Add" asp-route-id="@item.Product.Id" method="post" class="flex-grow-1">
+                                    <button type="submit" class="btn btn-primary mt-2" @(item.Product.Stock == 0 ? "disabled" : "")>
+
+                                        🛒 Adaugă în coș
+                                    </button>
+                                </form>
+
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <a asp-controller="Products" asp-action="Show" asp-route-id="@item.Product.Id" class="btn btn-primary mt-2">
+
+                                Vezi detalii produs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
