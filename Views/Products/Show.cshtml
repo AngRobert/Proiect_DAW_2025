@@ -2,6 +2,20 @@
 
 <div class="container my-4">
 
+    @if (ViewBag.GoodMsg != null)
+    {
+
+        <div class="alert alert-success" role="alert">
+            @ViewBag.GoodMsg
+        </div>
+    }
+    else if (ViewBag.BadMsg != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.BadMsg
+        </div>
+    }
+
     <div class="row">
         <div class="col-md-5 text-center">
             <img src="@Model.Image"
@@ -158,12 +172,12 @@
 
                             <div class="mb-3">
                                 <label class="form-label"> Text recenzie </label>
-                                <textarea class="form-control" rows="4" name="Text"></textarea>
+                                <textarea class="form-control" rows="4" name="Text">@ViewBag.DraftText</textarea>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label"> Rating </label>
-                                <input class="form-control" type="number" name="Rating"/>
+                                <input class="form-control" type="number" name="Rating" value="@ViewBag.DraftRating" />
                                 <span asp-validation-for="Rating" class="text-danger"></span>
                             </div>
 

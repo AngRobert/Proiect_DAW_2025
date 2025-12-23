@@ -16,14 +16,16 @@ namespace Proiect_DAW_2025.Controllers {
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager, IWebHostEnvironment env) {
+            RoleManager<IdentityRole> roleManager, IWebHostEnvironment env) 
+        {
             db = context;
             _env = env;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        public IActionResult Index() {
+        public IActionResult Index() 
+        {
             var products = db.Products.Include(p => p.Category);
 
             ViewBag.Products = products;
@@ -38,7 +40,14 @@ namespace Proiect_DAW_2025.Controllers {
             return View();
         }
 
-        public IActionResult Show(int id) {
+        public IActionResult Show(int id) 
+        {
+            if (TempData.ContainsKey("DraftReviewText"))
+            {
+                ViewBag.DraftText = TempData["DraftReviewText"];
+                ViewBag.DraftRating = TempData["DraftReviewRating"];
+            }
+
             Product? product = db.Products
                                  .Include(p => p.Category)
                                  .Include(p => p.Collaborator)
@@ -53,12 +62,23 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             product.Rating = product.CalculateScore();
+
+            if (TempData.ContainsKey("goodMessage"))
+            {
+                ViewBag.GoodMsg = TempData["goodMessage"];
+            }
+            else if (TempData.ContainsKey("badMessage"))
+            {
+                ViewBag.BadMsg = TempData["badMessage"];
+            }
+
             return View(product);
         }
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpGet]
-        public IActionResult New() {
+        public IActionResult New() 
+        {
             Product product = new Product();
 
             product.Categ = GetAllCategories();
@@ -68,7 +88,8 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public async Task<IActionResult> New(Product product, IFormFile Image) {
+        public async Task<IActionResult> New(Product product, IFormFile Image) 
+        {
             product.CollaboratorId = _userManager.GetUserId(User);
 
             if (Image != null && Image.Length > 0) {
@@ -113,7 +134,8 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpGet]
-        public IActionResult Edit(int id) {
+        public IActionResult Edit(int id) 
+        {
             Product? product = db.Products
                                  .Include(p => p.Category)
                                  .Where(p => p.Id == id)
@@ -136,7 +158,8 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Product requestProduct, IFormFile Image) {
+        public async Task<IActionResult> Edit(int id, Product requestProduct, IFormFile Image) 
+        {
             var originalProduct = db.Products.Find(id);
 
             if (originalProduct == null) {
@@ -203,7 +226,8 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public IActionResult Delete(int id) {
+        public IActionResult Delete(int id) 
+        {
             Product? product = db.Products
                                  .Include(p => p.Reviews)
                                  .Where(p => p.Id == id)
@@ -225,10 +249,20 @@ namespace Proiect_DAW_2025.Controllers {
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "User,Colaborator,Admin")]
         [HttpPost]
         public IActionResult Show([FromForm] Review review)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["infoMessage"] = "Pentru a continua, autentifică-te sau creează un cont";
+                TempData["messageType"] = "alert-info";
+
+                TempData["DraftReviewText"] = review.Text;
+                TempData["DraftReviewRating"] = review.Rating?.ToString();
+
+                return Redirect("/Identity/Account/Login?ReturnUrl=/Products/Show/" + review.ProductId);
+            }
+
             review.Date = DateTime.Now;
 
             review.UserId = _userManager.GetUserId(User);
@@ -257,12 +291,16 @@ namespace Proiect_DAW_2025.Controllers {
 
                 product.Rating = product.CalculateScore();
 
+                ViewBag.DraftText = review.Text;
+                ViewBag.DraftRating = review.Rating;
+
                 return View(product);
             }
         }
 
         [NonAction]
-        public IEnumerable<SelectListItem> GetAllCategories() {
+        public IEnumerable<SelectListItem> GetAllCategories() 
+        {
             var selectList = new List<SelectListItem>();
 
             var categories = from cat in db.Categories

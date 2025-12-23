@@ -37,7 +37,13 @@
                             </a>
                         </li>
 
-
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               asp-controller="Wishlist"
+                               asp-action="Index">
+                                Wishlist
+                            </a>
+                        </li>
 
                         @if (User.IsInRole("Admin")) 
                         {
@@ -150,6 +156,13 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["infoMessage"] != null)
+            {
+                <div class="alert @TempData["messageType"]" role="alert">
+                    @TempData["infoMessage"]
+                </div>
+            }
+
             @RenderBody()
         </main>
     </div>
