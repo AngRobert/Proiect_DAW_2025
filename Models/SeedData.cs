@@ -85,7 +85,7 @@ namespace Proiect_DAW_2025.Models
                 {
                     Title = "Laptop Gaming XZ500",
                     Description = "Un laptop performant pentru gaming și productivitate.",
-                    Image = "Images/laptop_gaming.jpg",
+                    Image = "/Images/laptop_gaming.jpg",
                     Price = 4500.00m,
                     Stock = 10,
                     CategoryId = catElectronics.Id,
@@ -96,7 +96,7 @@ namespace Proiect_DAW_2025.Models
                 {
                     Title = "Smartphone Ultra 2025",
                     Description = "Cea mai bună cameră foto de pe piață.",
-                    Image = "Images/smartphone.webp",
+                    Image = "/Images/smartphone.webp",
                     Price = 3200.99m,
                     Stock = 25,
                     CategoryId = catElectronics.Id,
@@ -107,7 +107,7 @@ namespace Proiect_DAW_2025.Models
                 {
                     Title = "Tricou bumbac organic",
                     Description = "Tricou confortabil, disponibil în mai multe culori.",
-                    Image = "Images/tricou_bumbac.jpg",
+                    Image = "/Images/tricou_bumbac.jpg",
                     Price = 89.99m,
                     Stock = 100,
                     CategoryId = catFashion.Id,
@@ -118,7 +118,7 @@ namespace Proiect_DAW_2025.Models
                 {
                     Title = "Rochie de vară florală",
                     Description = "Perfectă pentru zilele călduroase.",
-                    Image = "Images/rochie_vara_florala.webp",
+                    Image = "/Images/rochie_vara_florala.webp",
                     Price = 150.00m,
                     Stock = 15,
                     CategoryId = catFashion.Id,
@@ -129,7 +129,7 @@ namespace Proiect_DAW_2025.Models
                 {
                     Title = "Canapea extensibilă",
                     Description = "Confort maxim și design modern pentru livingul tău.",
-                    Image = "Images/canapea_extensibila.webp",
+                    Image = "/Images/canapea_extensibila.webp",
                     Price = 1200.50m,
                     Stock = 5,
                     CategoryId = catHome.Id,
