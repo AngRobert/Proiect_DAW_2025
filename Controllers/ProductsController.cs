@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
-using System.Threading.Tasks;
 
 namespace Proiect_DAW_2025.Controllers {
     public class ProductsController : Controller {
@@ -26,10 +26,54 @@ namespace Proiect_DAW_2025.Controllers {
 
         public IActionResult Index() 
         {
-            var products = db.Products.Include(p => p.Category);
+            IQueryable<Product> query = db.Products
+                                          .Include(p => p.Category)
+                                          .Include(p => p.Reviews);
+
+            var search = "";
+
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+
+                query = query.Where(p => p.Title.Contains(search) ||
+                                         p.Category.CategoryName.Contains(search)); ;
+            }
+
+            ViewBag.SearchString = search;
+
+            List<Product> products = query.ToList();
+
+            foreach (var product in products)
+            {
+                product.Rating = product.CalculateScore();
+            }
+
+            var sort = Convert.ToString(HttpContext.Request.Query["sort"]);
+
+            ViewBag.Sort = sort;
+
+            switch (sort)
+            {
+                case "price_asc":
+                    products = products.OrderBy(p => p.Price).ToList();
+                    break;
+                case "price_desc":
+                    products = products.OrderByDescending(p => p.Price).ToList();
+                    break;
+                case "rating_asc":
+                    products = products.OrderBy(p => p.Rating).ToList();
+                    break;
+                case "rating_desc":
+                    products = products.OrderByDescending(p => p.Rating).ToList();
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Price).ToList();
+                    break;
+            }
 
             ViewBag.Products = products;
-            
+       
             if (TempData.ContainsKey("goodMessage")) {
                 ViewBag.GoodMsg = TempData["goodMessage"];
             }
@@ -119,7 +163,7 @@ namespace Proiect_DAW_2025.Controllers {
             }
             else {
                 ModelState.AddModelError("Image",
-                    "Imaginea este obligatorie!");
+                    "Imaginea este obligatorie");
             }
 
             if (!TryValidateModel(product)) {
