@@ -20,6 +20,37 @@
         </div>
     }
 
+    <form method="get" asp-action="Index" class="row g-3 mb-4 p-3 border rounded bg-light" role="search">
+
+        <div class="col-md-6">
+            <label class="form-label">🔍 Caută produs sau categorie</label>
+            <input type="search" 
+                   class="form-control me-2" 
+                   name="search"
+                   placeholder="Search"
+                   value="@ViewBag.SearchString" />
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">🔃 Sortează după</label>
+            <select class="form-select" name="sort" onchange="this.form.submit()">
+                <!option value="" @(ViewBag.SortOrder == null ? "selected" : "")>-- Implicit --</!option>
+                <!option value="price_asc" @(ViewBag.Sort == "price_asc" ? "selected" : "")>Preț crescător</!option>
+                <!option value="price_desc" @(ViewBag.Sort == "price_desc" ? "selected" : "")>Preț descrescător</!option>
+                <!option value="rating_asc" @(ViewBag.Sort == "rating_asc" ? "selected" : "")>Rating crescător</!option>
+                <!option value="rating_desc" @(ViewBag.Sort == "rating_desc" ? "selected" : "")>Rating descrescător</!option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-success">Filtrează</button>
+        </div>
+
+        <div class="col-12">
+            <a asp-action="Index" class="text-decoration-none small text-muted">✖ Resetează filtrele</a>
+        </div>
+    </form>
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
 
         @foreach (var p in ViewBag.Products) {
