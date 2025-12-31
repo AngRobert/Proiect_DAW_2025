@@ -15,12 +15,16 @@ namespace Proiect_DAW_2025.Controllers {
             _userManager = userManager;
         }
 
-
-
         public async Task<IActionResult> Index() {
             var userId = _userManager.GetUserId(User);
 
-            var orders = await db.Orders.Where(o => o.UserId == userId).FirstOrDefaultAsync();
+            var orders = await db.Orders.Where(o => o.UserId == userId)
+                .Include(o => o.OrderItems).OrderByDescending(o => o.Date).ToListAsync();
+
+            if (TempData.ContainsKey("message")) {
+                ViewBag.Message = TempData["message"];
+                ViewBag.Alert = TempData["messageType"];
+            }
 
             return View(orders);
         }
@@ -83,6 +87,7 @@ namespace Proiect_DAW_2025.Controllers {
             await db.SaveChangesAsync();
 
             TempData["message"] = "Comanda a fost plasata cu succes!";
+            TempData["messageType"] = "alert-success";
             return RedirectToAction("Index");
         }
     }

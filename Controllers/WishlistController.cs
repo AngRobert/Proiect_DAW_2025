@@ -55,7 +55,8 @@ namespace Proiect_DAW_2025.Controllers
             var product = await db.Products.FindAsync(id);
             if (product == null)
             {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index", "Products");
             }
 
@@ -64,7 +65,8 @@ namespace Proiect_DAW_2025.Controllers
 
             if (exists)
             {
-                TempData["badMessage"] = "Produsul este deja în wishlist!";
+                TempData["message"] = "Produsul este deja în wishlist!";
+                TempData["messageType"] = "alert-danger";
             }
             else
             {
@@ -77,7 +79,8 @@ namespace Proiect_DAW_2025.Controllers
                 db.WishlistItems.Add(wishlistItem);
                 await db.SaveChangesAsync();
 
-                TempData["goodMessage"] = "Produsul a fost adăugat în wishlist!";
+                TempData["message"] = "Produsul a fost adăugat în wishlist!";
+                TempData["messageType"] = "alert-success";
             }
 
             return RedirectToAction("Show", "Products", new { id = id });

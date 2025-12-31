@@ -1,2 +1,54 @@
 ﻿@model IEnumerable<Proiect_DAW_2025.Models.Order>
 
+@{
+    ViewData["Title"] = "Comenzile mele";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">📦 Comenzile mele</h2>
+
+    @if (!Model.Any()) {
+        <p class="text-center text-muted fs-5">
+            Nu ai plasat nicio comandă.
+        </p>
+    }
+
+    @if (ViewBag.Message != null) {
+        <div class="alert @ViewBag.Alert" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+
+    else {
+        @foreach (var order in Model) {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+
+                    <div class="mb-2">
+                        <strong>Data:</strong>
+                        <span>@order.Date.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Total:</strong>
+                        <span class="text-danger fw-bold">
+                            @order.TotalAmount Lei
+                        </span>
+                    </div>
+
+                    <hr />
+
+                    <strong>Produse:</strong>
+                    <ul class="mb-0">
+                        @foreach (var item in order.OrderItems) {
+                            <li>
+                                @item.ProductName — Cantitate: @item.Quantity
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        }
+    }
+</div>
