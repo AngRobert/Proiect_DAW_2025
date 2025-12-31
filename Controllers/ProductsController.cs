@@ -74,11 +74,9 @@ namespace Proiect_DAW_2025.Controllers {
 
             ViewBag.Products = products;
        
-            if (TempData.ContainsKey("goodMessage")) {
-                ViewBag.GoodMsg = TempData["goodMessage"];
-            }
-            else if (TempData.ContainsKey("badMessage")) {
-                ViewBag.BadMsg = TempData["badMessage"];
+            if (TempData.ContainsKey("message")) {
+                ViewBag.Message = TempData["message"];
+                ViewBag.Alert = TempData["messageType"];
             }
 
             return View();
@@ -101,19 +99,17 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
             product.Rating = product.CalculateScore();
 
-            if (TempData.ContainsKey("goodMessage"))
+            if (TempData.ContainsKey("message"))
             {
-                ViewBag.GoodMsg = TempData["goodMessage"];
-            }
-            else if (TempData.ContainsKey("badMessage"))
-            {
-                ViewBag.BadMsg = TempData["badMessage"];
+                ViewBag.Message = TempData["message"];
+                ViewBag.Alert = TempData["messageType"];
             }
 
             return View(product);
@@ -174,7 +170,8 @@ namespace Proiect_DAW_2025.Controllers {
             db.Products.Add(product);
             db.SaveChanges();
 
-            TempData["goodMessage"] = "Produsul a fost adăugat cu succes!";
+            TempData["message"] = "Produsul a fost adăugat cu succes!";
+            TempData["messageType"] = "alert-success";
             return RedirectToAction("Index");
         }
 
@@ -189,12 +186,14 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
             if (product.CollaboratorId != _userManager.GetUserId(User) && !User.IsInRole("Admin")) {
-                TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
+                TempData["message"] = "Nu poți edita un produs care nu îți aparține!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
@@ -209,13 +208,15 @@ namespace Proiect_DAW_2025.Controllers {
             var originalProduct = db.Products.Find(id);
 
             if (originalProduct == null) {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
             if (!User.IsInRole("Admin") &&
                 originalProduct.CollaboratorId != _userManager.GetUserId(User)) {
-                TempData["badMessage"] = "Nu poți edita un produs care nu îți aparține!";
+                TempData["message"] = "Nu poți edita un produs care nu îți aparține!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
@@ -265,7 +266,8 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             db.SaveChanges();
-            TempData["goodMessage"] = "Produsul a fost modificat cu succes!";
+            TempData["message"] = "Produsul a fost modificat cu succes!";
+            TempData["messageType"] = "alert-success";
             return RedirectToAction("Index");
         }
 
@@ -280,18 +282,21 @@ namespace Proiect_DAW_2025.Controllers {
                                  .FirstOrDefault();
 
             if (product is null) {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
 
             if (User.IsInRole("Admin") || product.CollaboratorId == _userManager.GetUserId(User)) {
                 db.Products.Remove(product);
-                TempData["goodMessage"] = "Produsul a fost șters cu succes!";
+                TempData["message"] = "Produsul a fost șters cu succes!";
+                TempData["messageType"] = "alert-success";
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            TempData["badMessage"] = "Nu poți șterge un produs care nu îți aparține!";
+            TempData["message"] = "Nu poți șterge un produs care nu îți aparține!";
+            TempData["messageType"] = "alert-danger";
             return RedirectToAction("Index");
         }
 
@@ -331,7 +336,8 @@ namespace Proiect_DAW_2025.Controllers {
 
                 if (product is null)
                 {
-                    TempData["badMessage"] = "Produsul nu există!";
+                    TempData["message"] = "Produsul nu există!";
+                    TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index");
                 }
 

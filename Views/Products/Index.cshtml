@@ -7,16 +7,10 @@
 
 <div class="container my-4">
 
-    @if (ViewBag.GoodMsg != null) {
+    @if (ViewBag.Message != null) {
 
-        <div class="alert alert-success" role="alert">
-            @ViewBag.GoodMsg
-        </div>
-    }
-    else if (ViewBag.BadMsg != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            @ViewBag.BadMsg
+        <div class="alert @ViewBag.Alert" role="alert">
+            @ViewBag.Message
         </div>
     }
 

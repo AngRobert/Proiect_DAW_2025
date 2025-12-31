@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Proiect_DAW_2025.Data;
 
@@ -11,9 +12,11 @@ using Proiect_DAW_2025.Data;
 namespace Proiect_DAW_2025.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251231110116_AddedOrders")]
+    partial class AddedOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,8 +287,8 @@ namespace Proiect_DAW_2025.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -516,7 +519,7 @@ namespace Proiect_DAW_2025.Data.Migrations
             modelBuilder.Entity("Proiect_DAW_2025.Models.Order", b =>
                 {
                     b.HasOne("Proiect_DAW_2025.Models.ApplicationUser", "User")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -527,7 +530,7 @@ namespace Proiect_DAW_2025.Data.Migrations
             modelBuilder.Entity("Proiect_DAW_2025.Models.OrderItem", b =>
                 {
                     b.HasOne("Proiect_DAW_2025.Models.Order", "Order")
-                        .WithMany("OrderItems")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -619,8 +622,6 @@ namespace Proiect_DAW_2025.Data.Migrations
 
             modelBuilder.Entity("Proiect_DAW_2025.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("Products");
 
                     b.Navigation("Reviews");
@@ -633,11 +634,6 @@ namespace Proiect_DAW_2025.Data.Migrations
             modelBuilder.Entity("Proiect_DAW_2025.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Proiect_DAW_2025.Models.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Proiect_DAW_2025.Models.Product", b =>

@@ -50,7 +50,8 @@ namespace Proiect_DAW_2025.Controllers {
             var product = await db.Products.FindAsync(id);
 
             if (product == null) {
-                TempData["badMessage"] = "Produsul nu există!";
+                TempData["message"] = "Produsul nu există!";
+                TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index", "Products");
             }
 
@@ -60,13 +61,11 @@ namespace Proiect_DAW_2025.Controllers {
             if (exists) {
                 var item = await db.ShoppingCartItems.Where(w => w.UserId == userId && w.ProductId == id).FirstOrDefaultAsync();
                 if (product.Stock < item.Quantity + 1) {
-                    TempData["badMessage"] = "Stoc indisponibil!";
                     TempData["message"] = "Stoc indisponibil!";
                     TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index", "Cart");
                 }
                 else {
-                    TempData["goodMessage"] = "Produsul se afla deja in coș, cantitatea a fost mărită!";
                     TempData["message"] = "Produsul se afla deja in coș, cantitatea a fost mărită!";
                     TempData["messageType"] = "alert-success";
                     item.Quantity += 1;
@@ -84,12 +83,10 @@ namespace Proiect_DAW_2025.Controllers {
                     db.ShoppingCartItems.Add(shoppingCartItem);
                     await db.SaveChangesAsync();
 
-                    TempData["goodMessage"] = "Produsul a fost adăugat în coș!";
                     TempData["message"] = "Produsul a fost adăugat în coș!";
                     TempData["messageType"] = "alert-success";
                 }
                 else {
-                    TempData["badMessage"] = "Stoc indisponibil!";
                     TempData["message"] = "Stoc indisponibil!";
                     TempData["messageType"] = "alert-danger";
                 }
