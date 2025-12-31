@@ -27,6 +27,8 @@ namespace Proiect_DAW_2025.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<WishlistItem> WishlistItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
     }
 }
