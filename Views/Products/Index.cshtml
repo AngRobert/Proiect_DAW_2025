@@ -49,13 +49,16 @@
                            Afișează produs
                         </a>
 
-                        <a asp-controller="Cart"
+                        <form method="post" asp-controller="Cart"
                            asp-action="Add"
                            asp-route-id="@p.Id"
-                           class="btn btn-primary mt-2">
-
-                            Adaugă în coș
-                        </a>
+                           class="mt-2">
+                            <input type="hidden" name="returnUrl"
+                                   value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-primary w-100" @(p.Stock == 0 ? "disabled" : "")>
+                                Adaugă în coș
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

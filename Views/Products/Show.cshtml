@@ -21,7 +21,28 @@
             <img src="@Model.Image"
                  class="img-fluid rounded border"
                  alt="@Model.Title" />
+
+        <br />
+
+            <div class="text-start">
+                @if (Model.Stock > 0) {
+                    @if (Model.Stock <= 3)
+                    {
+                        <span class="badge bg-success mb-2">În stoc : Rămase @Model.Stock </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success mb-2">În stoc</span>
+                    }
+
+                }
+                else {
+                    <span class="badge bg-danger mb-2">Stoc epuizat</span>
+                }
+            </div>
         </div>
+
+        
 
         <div class="col-md-7 position-relative">
 
@@ -74,7 +95,8 @@
                       asp-controller="Cart"
                       asp-action="Add"
                       asp-route-id="@Model.Id">
-                    <button class="btn btn-primary px-4">
+                      <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                    <button class="btn btn-primary px-4" @(Model.Stock == 0 ? "disabled" : "")>
                         🛒 Adaugă în coș
                     </button>
                 </form>
