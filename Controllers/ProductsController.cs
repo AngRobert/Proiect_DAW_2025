@@ -71,13 +71,31 @@ namespace Proiect_DAW_2025.Controllers {
                     products = products.OrderBy(p => p.Price).ToList();
                     break;
             }
-
-            ViewBag.Products = products;
        
             if (TempData.ContainsKey("message")) {
                 ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
+
+            int _perPage = 8;
+            int totalItems = products.Count();
+            int currentPage = 1;
+
+            if (int.TryParse(HttpContext.Request.Query["page"], out int page)) {
+                currentPage = page;
+            }
+
+            var offset = 0;
+
+            if (currentPage > 1) {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedProducts = products.Skip(offset).Take(_perPage).ToList();
+
+            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.currentPage = currentPage;
+            ViewBag.Products = paginatedProducts;
 
             return View();
         }
@@ -162,6 +180,17 @@ namespace Proiect_DAW_2025.Controllers {
                     "Imaginea este obligatorie");
             }
 
+            if (User.IsInRole("Admin")) {
+                product.Status = "aprobat";
+            }
+            else {
+                if (User.IsInRole("Colaborator")) {
+                    product.Status = "asteptare";
+                }
+            }
+
+            ModelState.Remove(nameof(product.Status));
+
             if (!TryValidateModel(product)) {
                 product.Categ = GetAllCategories();
                 return View(product);
@@ -225,6 +254,15 @@ namespace Proiect_DAW_2025.Controllers {
             originalProduct.Stock = requestProduct.Stock;
             originalProduct.CategoryId = requestProduct.CategoryId;
             originalProduct.Description = requestProduct.Description;
+
+            if (User.IsInRole("Admin")) {
+                originalProduct.Status = "aprobat";
+            }
+            else {
+                if (User.IsInRole("Colaborator")) {
+                    originalProduct.Status = "asteptare";
+                }
+            }
 
             if (Image != null && Image.Length > 0) {
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
