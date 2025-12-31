@@ -25,6 +25,23 @@
                    value="@ViewBag.SearchString" />
         </div>
 
+        @if (User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+        {
+            <div class="col-md-3">
+                <label class="form-label">📦 Status produs</label>
+                <select class="form-select" name="status" onchange="this.form.submit()">
+                    <option value="">-- Toate --</option>
+                    <!option value="asteptare" @(ViewBag.Status == "asteptare" ? "selected" : "")>
+                        În așteptare
+                    </!option>
+                    <!option value="respins" @(ViewBag.Status == "respins" ? "selected" : "")>
+                        Respins
+                    </!option>
+                </select>
+            </div>
+        }
+
+
         <div class="col-md-4">
             <label class="form-label">🔃 Sortează după</label>
             <select class="form-select" name="sort" onchange="this.form.submit()">
@@ -48,6 +65,9 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
 
         @foreach (var p in ViewBag.Products) {
+            if (p.Status != "aprobat" && string.IsNullOrEmpty(ViewBag.Status)) {
+                continue;
+            }
             <div class="col">
                 <div class="card h-100 product-card">
 
@@ -100,7 +120,8 @@
                            asp-action="Index"
                            asp-route-page="@i"
                            asp-route-search="@ViewBag.SearchString"
-                           asp-route-sort="@ViewBag.Sort">
+                           asp-route-sort="@ViewBag.Sort"
+                           asp-route-status="@ViewBag.Status">
                             @i
                         </a>
                     </li>

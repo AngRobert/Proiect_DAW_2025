@@ -42,6 +42,29 @@ namespace Proiect_DAW_2025.Controllers {
 
             ViewBag.SearchString = search;
 
+            var status = Convert.ToString(HttpContext.Request.Query["status"]);
+            var isAdmin = User.IsInRole("Admin");
+            var isColaborator = User.IsInRole("Colaborator");
+
+            if (!isAdmin && !isColaborator) {
+                query = query.Where(p => p.Status == "aprobat");
+            }
+
+            if (isColaborator && !isAdmin) {
+                query = query.Where(p =>
+                    p.Status == "aprobat" ||
+                    p.CollaboratorId == _userManager.GetUserId(User));
+            }
+
+            ViewBag.Status = status;
+
+            if (string.IsNullOrEmpty(status)) {
+                query = query.Where(p => p.Status == "aprobat");
+            }
+            else if (isAdmin || isColaborator) {
+                query = query.Where(p => p.Status == status);
+            }
+
             List<Product> products = query.ToList();
 
             foreach (var product in products)
