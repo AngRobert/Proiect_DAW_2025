@@ -31,6 +31,8 @@ namespace Proiect_DAW_2025.Models
 
         public string Status { get; set; }
 
+        public string? AdminFeedback { get; set; }
+
         public string? Image { get; set; }
 
         public virtual Category? Category { get; set; }

@@ -32,12 +32,12 @@
                 <label class="form-label">📦 Status produs</label>
                 <select class="form-select" name="status" onchange="this.form.submit()">
                     <option value="">-- Toate --</option>
-                    <!option value="asteptare" @(ViewBag.Status == "asteptare" ? "selected" : "")>
+                    <option value="asteptare" selected="@(ViewBag.Status == "asteptare")">
                         În așteptare
-                    </!option>
-                    <!option value="respins" @(ViewBag.Status == "respins" ? "selected" : "")>
+                    </option>
+                    <option value="respins" selected="@(ViewBag.Status == "respins")">
                         Respins
-                    </!option>
+                    </option>
                 </select>
             </div>
         }
@@ -45,11 +45,31 @@
         <div class="col-md-4">
             <label class="form-label">🔃 Sortează după</label>
             <select class="form-select" name="sort" onchange="this.form.submit()">
-                <!option value="" @(ViewBag.SortOrder == null ? "selected" : "")>-- Implicit --</!option>
-                <!option value="price_asc" @(ViewBag.Sort == "price_asc" ? "selected" : "")>Preț crescător</!option>
-                <!option value="price_desc" @(ViewBag.Sort == "price_desc" ? "selected" : "")>Preț descrescător</!option>
-                <!option value="rating_asc" @(ViewBag.Sort == "rating_asc" ? "selected" : "")>Rating crescător</!option>
-                <!option value="rating_desc" @(ViewBag.Sort == "rating_desc" ? "selected" : "")>Rating descrescător</!option>
+                <option value=""
+                        selected="@(string.IsNullOrEmpty(ViewBag.Sort))">
+                    -- Implicit --
+                </option>
+
+                <option value="price_asc"
+                        selected="@(ViewBag.Sort == "price_asc")">
+                    Preț crescător
+                </option>
+
+                <option value="price_desc"
+                        selected="@(ViewBag.Sort == "price_desc")">
+                    Preț descrescător
+                </option>
+
+                <option value="rating_asc"
+                        selected="@(ViewBag.Sort == "rating_asc")">
+                    Rating crescător
+                </option>
+
+                <option value="rating_desc"
+                        selected="@(ViewBag.Sort == "rating_desc")">
+                    Rating descrescător
+                </option>
+
             </select>
         </div>
 
@@ -102,17 +122,13 @@
                                         </button>
                                     </form>
 
-                                    <form asp-controller="Products"
-                                          asp-action="Reject"
-                                          asp-route-id="@p.Id"
-                                          method="post"
-                                          class="w-100">
-                                        <input type="hidden" name="returnUrl"
-                                               value="@returnUrl" />
-                                        <button type="submit" class="btn btn-danger btn-sm w-100">
-                                            ✖ Respinge
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm w-100" 
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#rejectModal"
+                                            onclick="setRejectProduct(@p.Id)">
+                                        ✖ Respinge
+                                    </button>
+                                    
                                 }
 
                                 @if (p.Status == "respins") {
@@ -176,4 +192,52 @@
             </ul>
         </nav>
     }
+    <div class="modal fade" id="rejectModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <form asp-controller="Products"
+                      asp-action="Reject"
+                      method="post">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Respinge produs</h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="rejectProductId" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                        <textarea name="adminFeedback"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Motivul respingerii..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Anulează
+                        </button>
+                        <button type="submit"
+                                class="btn btn-danger">
+                            Trimite
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+<script>
+    function setRejectProduct(productId) {
+        document.getElementById("rejectProductId").value = productId;
+    }
+</script>

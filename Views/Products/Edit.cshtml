@@ -1,4 +1,17 @@
 ﻿@model Proiect_DAW_2025.Models.Product
+@using System.Security.Claims
+
+@{
+    var isAdmin = User.IsInRole("Admin");
+    var isOwner = Model.CollaboratorId == User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+@if (!string.IsNullOrEmpty(Model.AdminFeedback) && (isAdmin || isOwner)) {
+    <div class="alert alert-warning">
+        <strong>Feedback de la Admin:</strong>
+        <p class="mb-0">@Model.AdminFeedback</p>
+    </div>
+}
 
 <div class="container mt-5">
     <div class="row justify-content-center">

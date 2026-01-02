@@ -61,16 +61,57 @@
                                 </button>
                             </form>
 
-                            <form asp-controller="Products"
-                                  asp-action="Reject"
-                                  asp-route-id="@Model.Id"
-                                  method="post">
-                                <input type="hidden" name="returnUrl"
-                                       value="@returnUrl" />
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    ✖ Respinge
-                                </button>
-                            </form>
+                            <button type="button" "class="btn btn-danger btn-sm w-100"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#rejectModal-@Model.Id">
+                                ✖ Respinge
+                            </button>
+
+                            <div class="modal fade" id="rejectModal-@Model.Id" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <form asp-controller="Products"
+                                              asp-action="Reject"
+                                              method="post">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Respinge produs</h5>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <input type="hidden" name="id" value="@Model.Id" />
+                                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                                                <textarea name="adminFeedback"
+                                              class="form-control"
+                                              rows="4"
+                                              placeholder="Motivul respingerii..."
+                                              required></textarea>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Anulează
+                                                </button>
+
+                                                <button type="submit"
+                                                        class="btn btn-danger">
+                                                    Trimite
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         }
                         else if (Model.Status == "respins") {
                             <form asp-controller="Products"

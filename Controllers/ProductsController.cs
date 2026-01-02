@@ -394,6 +394,7 @@ namespace Proiect_DAW_2025.Controllers {
                 return RedirectToAction("Index");
             }
 
+            product.AdminFeedback = null;
             product.Status = "aprobat";
             db.SaveChanges();
 
@@ -409,7 +410,7 @@ namespace Proiect_DAW_2025.Controllers {
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Reject(int id, string returnUrl) {
+        public IActionResult Reject(int id, string adminFeedback, string returnUrl) {
             var product = db.Products.Find(id);
 
             if (product is null) {
@@ -425,6 +426,7 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             product.Status = "respins";
+            product.AdminFeedback = adminFeedback;
             db.SaveChanges();
 
             TempData["message"] = "Produsul a fost respins!";
