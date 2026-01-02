@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Produse";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
 }
 
 <br />
@@ -15,7 +16,7 @@
     }
 
     <form method="get" asp-action="Index" class="row g-3 mb-4 p-3 border rounded bg-light" role="search">
-
+        <input type="hidden" name="page" value="1" />
         <div class="col-md-6">
             <label class="form-label">🔍 Caută produs sau categorie</label>
             <input type="search" 
@@ -25,14 +26,50 @@
                    value="@ViewBag.SearchString" />
         </div>
 
+        @if (User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+        {
+            <div class="col-md-3">
+                <label class="form-label">📦 Status produs</label>
+                <select class="form-select" name="status" onchange="this.form.submit()">
+                    <option value="">-- Toate --</option>
+                    <option value="asteptare" selected="@(ViewBag.Status == "asteptare")">
+                        În așteptare
+                    </option>
+                    <option value="respins" selected="@(ViewBag.Status == "respins")">
+                        Respins
+                    </option>
+                </select>
+            </div>
+        }
+
         <div class="col-md-4">
             <label class="form-label">🔃 Sortează după</label>
             <select class="form-select" name="sort" onchange="this.form.submit()">
-                <!option value="" @(ViewBag.SortOrder == null ? "selected" : "")>-- Implicit --</!option>
-                <!option value="price_asc" @(ViewBag.Sort == "price_asc" ? "selected" : "")>Preț crescător</!option>
-                <!option value="price_desc" @(ViewBag.Sort == "price_desc" ? "selected" : "")>Preț descrescător</!option>
-                <!option value="rating_asc" @(ViewBag.Sort == "rating_asc" ? "selected" : "")>Rating crescător</!option>
-                <!option value="rating_desc" @(ViewBag.Sort == "rating_desc" ? "selected" : "")>Rating descrescător</!option>
+                <option value=""
+                        selected="@(string.IsNullOrEmpty(ViewBag.Sort))">
+                    -- Implicit --
+                </option>
+
+                <option value="price_asc"
+                        selected="@(ViewBag.Sort == "price_asc")">
+                    Preț crescător
+                </option>
+
+                <option value="price_desc"
+                        selected="@(ViewBag.Sort == "price_desc")">
+                    Preț descrescător
+                </option>
+
+                <option value="rating_asc"
+                        selected="@(ViewBag.Sort == "rating_asc")">
+                    Rating crescător
+                </option>
+
+                <option value="rating_desc"
+                        selected="@(ViewBag.Sort == "rating_desc")">
+                    Rating descrescător
+                </option>
+
             </select>
         </div>
 
@@ -48,6 +85,9 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
 
         @foreach (var p in ViewBag.Products) {
+            if (p.Status != "aprobat" && string.IsNullOrEmpty(ViewBag.Status)) {
+                continue;
+            }
             <div class="col">
                 <div class="card h-100 product-card">
 
@@ -66,6 +106,48 @@
                             @p.Price Lei
                         </div>
 
+                        @if (User.IsInRole("Admin")) {
+                            <div class="mt-2 d-flex gap-2">
+
+                                @if (p.Status == "asteptare") {
+                                    <form asp-controller="Products"
+                                          asp-action="Approve"
+                                          asp-route-id="@p.Id"
+                                          method="post"
+                                          class="w-100">
+                                        <input type="hidden" name="returnUrl"
+                                               value="@returnUrl" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            ✔ Aprobă
+                                        </button>
+                                    </form>
+
+                                    <button type="button" class="btn btn-danger btn-sm w-100" 
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#rejectModal"
+                                            onclick="setRejectProduct(@p.Id)">
+                                        ✖ Respinge
+                                    </button>
+                                    
+                                }
+
+                                @if (p.Status == "respins") {
+                                    <form asp-controller="Products"
+                                          asp-action="Approve"
+                                          asp-route-id="@p.Id"
+                                          method="post"
+                                          class="w-100">
+                                        <input type="hidden" name="returnUrl"
+                                               value="@returnUrl" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            ✔ Aprobă
+                                        </button>
+                                    </form>
+                                }
+
+                            </div>
+                        }
+
                         <a asp-controller="Products"
                            asp-action="Show"
                            asp-route-id="@p.Id"
@@ -79,7 +161,7 @@
                            asp-route-id="@p.Id"
                            class="mt-2">
                             <input type="hidden" name="returnUrl"
-                                   value="@Context.Request.Path" />
+                                   value="@returnUrl" />
                             <button type="submit" class="btn btn-primary w-100" @(p.Stock == 0 ? "disabled" : "")>
                                 Adaugă în coș
                             </button>
@@ -90,4 +172,72 @@
         }
 
     </div>
+    @if (ViewBag.lastPage > 1) {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                @for (int i = 1; i <= ViewBag.lastPage; i++) {
+                    <li class="page-item @(i == ViewBag.currentPage ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-search="@ViewBag.SearchString"
+                           asp-route-sort="@ViewBag.Sort"
+                           asp-route-status="@ViewBag.Status">
+                            @i
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
+    <div class="modal fade" id="rejectModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <form asp-controller="Products"
+                      asp-action="Reject"
+                      method="post">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Respinge produs</h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="rejectProductId" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                        <textarea name="adminFeedback"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Motivul respingerii..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Anulează
+                        </button>
+                        <button type="submit"
+                                class="btn btn-danger">
+                            Trimite
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+<script>
+    function setRejectProduct(productId) {
+        document.getElementById("rejectProductId").value = productId;
+    }
+</script>
