@@ -45,3 +45,21 @@ body {
     height: 180px;
     padding: 10px;
 }
+
+.product-image-wrapper {
+    width: 100%;
+    height: 350px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa; 
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+}
