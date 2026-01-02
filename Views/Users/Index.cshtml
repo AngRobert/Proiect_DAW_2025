@@ -4,6 +4,16 @@
     var roles = ViewBag.Roles as IEnumerable<SelectListItem>;
 }
 
+<br />
+<br />
+
+@if (ViewBag.Message != null) {
+
+    <div class="alert @ViewBag.Alert" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
 <div class="container mt-4">
 
     <h2 class="mb-4">Utilizatori</h2>
@@ -31,17 +41,14 @@
                 <div class="col-md-3">
                     <form asp-controller="Users"
                           asp-action="ChangeRole"
+                          asp-route-id="@user.Id"
                           method="post"
                           class="d-flex gap-2">
-
-                        <input type="hidden" name="userId" value="@user.Id" />
 
                         <select name="role" class="form-select form-select-sm">
                             @foreach (var role in roles) {
                                 <option value="@role.Value"
-                                        selected="@(userRoles != null
-                                                    && userRoles.ContainsKey(user.Id)
-                                                    && userRoles[user.Id] == role.Value)">
+                                        selected="@(userRoles != null && userRoles.ContainsKey(user.Id) && userRoles[user.Id] == role.Value)">
                                     @role.Text
                                 </option>
                             }

@@ -52,11 +52,37 @@ namespace Proiect_DAW_2025.Controllers {
             ViewBag.UserRoles = userRoles;
 
             if (TempData.ContainsKey("message")) {
-                ViewBag.Msg = TempData["message"];
+                ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
 
             return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(string id, string role) {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null) {
+                TempData["message"] = "User-ul nu exista!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            if (string.IsNullOrEmpty(role)) {
+                TempData["message"] = "Rol invalid!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, role);
+
+            TempData["message"] = "Rolul a fost modificat cu succes!";
+            TempData["messageType"] = "alert-success";
+            return RedirectToAction("Index");
         }
 
         [NonAction]
