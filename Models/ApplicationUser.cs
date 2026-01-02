@@ -16,5 +16,7 @@ namespace Proiect_DAW_2025.Models {
 
         [NotMapped]
         public IEnumerable<SelectListItem>? AllRoles { get; set; }
+
+
     }
 }
