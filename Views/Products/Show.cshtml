@@ -1,5 +1,9 @@
 ﻿@model Proiect_DAW_2025.Models.Product
 
+@{
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
 <div class="container my-4">
 
     @if (ViewBag.Message != null) {
@@ -44,6 +48,44 @@
 
                 <div class="position-absolute top-0 end-0 d-flex flex-column gap-2">
 
+                    @if (User.IsInRole("Admin")) {
+                        @if (Model.Status == "asteptare") {
+                            <form asp-controller="Products"
+                                  asp-action="Approve"
+                                  asp-route-id="@Model.Id"
+                                  method="post">
+                                <input type="hidden" name="returnUrl"
+                                       value="@returnUrl" />
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    ✔ Aprobă
+                                </button>
+                            </form>
+
+                            <form asp-controller="Products"
+                                  asp-action="Reject"
+                                  asp-route-id="@Model.Id"
+                                  method="post">
+                                <input type="hidden" name="returnUrl"
+                                       value="@returnUrl" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    ✖ Respinge
+                                </button>
+                            </form>
+                        }
+                        else if (Model.Status == "respins") {
+                            <form asp-controller="Products"
+                                  asp-action="Approve"
+                                  asp-route-id="@Model.Id"
+                                  method="post">
+                                <input type="hidden" name="returnUrl"
+                                       value="@returnUrl" />
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    ✔ Aprobă
+                                </button>
+                            </form>
+                        }
+                    }
+
                     <a asp-controller="Products"
                        asp-action="Edit"
                        asp-route-id="@Model.Id"
@@ -62,6 +104,7 @@
                     </form>
 
                 </div>
+
             }
 
             <h2 class="fw-bold">@Model.Title</h2>
@@ -87,7 +130,7 @@
                       asp-controller="Cart"
                       asp-action="Add"
                       asp-route-id="@Model.Id">
-                      <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                      <input type="hidden" name="returnUrl" value="@returnUrl" />
                     <button class="btn btn-primary px-4" @(Model.Stock == 0 ? "disabled" : "")>
                         🛒 Adaugă în coș
                     </button>

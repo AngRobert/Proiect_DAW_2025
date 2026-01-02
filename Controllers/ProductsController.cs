@@ -119,6 +119,7 @@ namespace Proiect_DAW_2025.Controllers {
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.currentPage = currentPage;
             ViewBag.Products = paginatedProducts;
+            ViewBag.ReturnUrl = HttpContext.Request.Path + HttpContext.Request.QueryString;
 
             return View();
         }
@@ -321,6 +322,9 @@ namespace Proiect_DAW_2025.Controllers {
                 ModelState.Remove(nameof(originalProduct.Image));   
             }
 
+            ModelState.Remove(nameof(Product.Status));
+
+
             if (!TryValidateModel(originalProduct)) {
                 requestProduct.Categ = GetAllCategories();
                 return View(requestProduct);
@@ -370,6 +374,66 @@ namespace Proiect_DAW_2025.Controllers {
 
             TempData["message"] = "Nu poți șterge un produs care nu îți aparține!";
             TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Approve(int id, string returnUrl) {
+            var product = db.Products.Find(id);
+
+            if (product is null) {
+                TempData["message"] = "Produsul nu exista!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            if (product.Status == "aprobat") {
+                TempData["message"] = "Produsul este deja aprobat!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            product.Status = "aprobat";
+            db.SaveChanges();
+
+            TempData["message"] = "Produsul a fost aprobat!";
+            TempData["messageType"] = "alert-success";
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Reject(int id, string returnUrl) {
+            var product = db.Products.Find(id);
+
+            if (product is null) {
+                TempData["message"] = "Produsul nu exista!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            if (product.Status == "respins") {
+                TempData["message"] = "Produsul este deja respins!";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index");
+            }
+
+            product.Status = "respins";
+            db.SaveChanges();
+
+            TempData["message"] = "Produsul a fost respins!";
+            TempData["messageType"] = "alert-success";
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction("Index");
         }
 

@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Produse";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
 }
 
 <br />
@@ -40,7 +41,6 @@
                 </select>
             </div>
         }
-
 
         <div class="col-md-4">
             <label class="form-label">🔃 Sortează după</label>
@@ -86,6 +86,52 @@
                             @p.Price Lei
                         </div>
 
+                        @if (User.IsInRole("Admin")) {
+                            <div class="mt-2 d-flex gap-2">
+
+                                @if (p.Status == "asteptare") {
+                                    <form asp-controller="Products"
+                                          asp-action="Approve"
+                                          asp-route-id="@p.Id"
+                                          method="post"
+                                          class="w-100">
+                                        <input type="hidden" name="returnUrl"
+                                               value="@returnUrl" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            ✔ Aprobă
+                                        </button>
+                                    </form>
+
+                                    <form asp-controller="Products"
+                                          asp-action="Reject"
+                                          asp-route-id="@p.Id"
+                                          method="post"
+                                          class="w-100">
+                                        <input type="hidden" name="returnUrl"
+                                               value="@returnUrl" />
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            ✖ Respinge
+                                        </button>
+                                    </form>
+                                }
+
+                                @if (p.Status == "respins") {
+                                    <form asp-controller="Products"
+                                          asp-action="Approve"
+                                          asp-route-id="@p.Id"
+                                          method="post"
+                                          class="w-100">
+                                        <input type="hidden" name="returnUrl"
+                                               value="@returnUrl" />
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            ✔ Aprobă
+                                        </button>
+                                    </form>
+                                }
+
+                            </div>
+                        }
+
                         <a asp-controller="Products"
                            asp-action="Show"
                            asp-route-id="@p.Id"
@@ -99,7 +145,7 @@
                            asp-route-id="@p.Id"
                            class="mt-2">
                             <input type="hidden" name="returnUrl"
-                                   value="@Context.Request.Path" />
+                                   value="@returnUrl" />
                             <button type="submit" class="btn btn-primary w-100" @(p.Stock == 0 ? "disabled" : "")>
                                 Adaugă în coș
                             </button>
