@@ -14,11 +14,9 @@ namespace Proiect_DAW_2025.Models {
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
         [NotMapped]
         public IEnumerable<SelectListItem>? AllRoles { get; set; }
+
+
     }
 }

@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Utilizatori";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, string>;
+    var roles = ViewBag.Roles as IEnumerable<SelectListItem>;
+}
+
+<br />
+<br />
+
+@if (ViewBag.Message != null) {
+
+    <div class="alert @ViewBag.Alert" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Utilizatori</h2>
+
+    @foreach (var user in ViewBag.Users) {
+        <div class="border rounded p-3 mb-3 bg-light">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-3">
+                    <strong>Username</strong><br />
+                    @user.UserName
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Email</strong><br />
+                    @user.Email
+                </div>
+
+                <div class="col-md-2">
+                    <strong>Rol curent</strong><br />
+                    @userRoles[user.Id]
+                </div>
+
+                <div class="col-md-3">
+                    <form asp-controller="Users"
+                          asp-action="ChangeRole"
+                          asp-route-id="@user.Id"
+                          method="post"
+                          class="d-flex gap-2">
+
+                        <select name="role" class="form-select form-select-sm">
+                            @foreach (var role in roles) {
+                                <option value="@role.Value"
+                                        selected="@(userRoles != null && userRoles.ContainsKey(user.Id) && userRoles[user.Id] == role.Value)">
+                                    @role.Text
+                                </option>
+                            }
+
+                        </select>
+
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Salvează
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+
+@if (ViewBag.lastPage > 1) {
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            @for (int i = 1; i <= ViewBag.lastPage; i++) {
+                <li class="page-item @(i == ViewBag.currentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-search="@ViewBag.SearchString"
+                       asp-route-sort="@ViewBag.Sort"
+                       asp-route-status="@ViewBag.Status">
+                        @i
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+}
