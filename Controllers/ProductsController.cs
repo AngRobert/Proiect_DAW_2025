@@ -349,6 +349,18 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             if (User.IsInRole("Admin") || product.CollaboratorId == _userManager.GetUserId(User)) {
+
+                if (!string.IsNullOrEmpty(product.Image)) {
+                    var imagePath = Path.Combine(
+                        _env.WebRootPath,
+                        product.Image.TrimStart('/')
+                    );
+
+                    if (System.IO.File.Exists(imagePath)) {
+                        System.IO.File.Delete(imagePath);
+                    }
+                }
+
                 db.Products.Remove(product);
                 TempData["message"] = "Produsul a fost șters cu succes!";
                 TempData["messageType"] = "alert-success";
