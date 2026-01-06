@@ -186,6 +186,14 @@ namespace Proiect_DAW_2025.Models
                         UserId = "e6a3ac89-2a22-44b1-bc90-c58469c34c87"
                     }
                 );
+
+                context.FAQs.AddRange(
+                    new FAQ { Text = "Cât ține bateria?", Answer = "Bateria ține aproximativ 10 ore în utilizare normală.", ProductId = prod1.Id },
+                    new FAQ { Text = "Are garanție?", Answer = "Da, produsul vine cu 2 ani garanție.", ProductId = prod1.Id },
+                    new FAQ { Text = "Este rezistent la apă?", Answer = "Da, are certificare IP68.", ProductId = prod2.Id },
+                    new FAQ { Text = "Cum se spală?", Answer = "Se recomandă spălarea la 30 de grade.", ProductId = prod3.Id }
+                );
+
                 context.SaveChanges();
             }
         }

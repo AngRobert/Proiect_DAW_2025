@@ -19,6 +19,7 @@ options.SignIn.RequireConfirmedAccount = true)
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<Proiect_DAW_2025.Services.ProductAssistantService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {

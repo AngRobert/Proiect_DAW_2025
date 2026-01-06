@@ -319,3 +319,60 @@
     }
 
 </div>
+
+<button class="btn btn-info position-fixed bottom-0 end-0 m-4 rounded-circle p-3 shadow"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#aiChat"
+        style="z-index: 1000;">
+    🤖 AI
+</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="aiChat" aria-labelledby="aiChatLabel">
+    <div class="offcanvas-header bg-info text-white">
+        <h5 class="offcanvas-title" id="aiChatLabel">Product Assistant 🤖</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+
+        @if (ViewBag.AiMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.AiMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="alert alert-light border">
+            Salut! Sunt asistentul tău virtual. Întreabă-mă orice despre <strong>@Model.Title</strong>!
+            <br>
+            <small class="text-muted">Ex: "Are garanție?", "Este potrivit pentru copii?"</small>
+        </div>
+
+        <div class="flex-grow-1 overflow-auto mb-3">
+            @if (Model.FAQs != null)
+            {
+                foreach (var faq in Model.FAQs.OrderByDescending(f => f.Id).Take(5))
+                {
+                    <div class="d-flex flex-column mb-3">
+                        <div class="align-self-end bg-primary text-white p-2 rounded mb-1" style="max-width: 80%;">
+                            @faq.Text
+                        </div>
+                        <div class="align-self-start bg-light border p-2 rounded" style="max-width: 80%;">
+                            @faq.Answer
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <form asp-controller="Products" asp-action="AskAI" method="post" class="mt-auto">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <div class="input-group">
+                <input type="text" name="question" class="form-control" placeholder="Întreabă aici..." required>
+                <button class="btn btn-primary" type="button" onclick="this.form.submit()">Trimite</button>
+            </div>
+        </form>
+
+    </div>
+</div>
