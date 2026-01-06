@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
+using Proiect_DAW_2025.Services;
 
 namespace Proiect_DAW_2025.Controllers {
     public class ProductsController : Controller {
@@ -15,13 +16,19 @@ namespace Proiect_DAW_2025.Controllers {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager, IWebHostEnvironment env) 
+        private readonly ProductAssistantService _assistantService;
+
+        public ProductsController(ApplicationDbContext context,
+                                  UserManager<ApplicationUser> userManager,
+                                  RoleManager<IdentityRole> roleManager,
+                                  IWebHostEnvironment env,
+                                  ProductAssistantService assistantService)
         {
             db = context;
             _env = env;
             _userManager = userManager;
             _roleManager = roleManager;
+            _assistantService = assistantService;
         }
 
         public IActionResult Index() 
@@ -132,11 +139,17 @@ namespace Proiect_DAW_2025.Controllers {
                 ViewBag.DraftRating = TempData["DraftReviewRating"];
             }
 
+            if (TempData.ContainsKey("AiMessage"))
+            {
+                ViewBag.AiMessage = TempData["AiMessage"];
+            }
+
             Product? product = db.Products
                                  .Include(p => p.Category)
                                  .Include(p => p.Collaborator)
                                  .Include(p => p.Reviews)
                                     .ThenInclude(r => r.User)
+                                 .Include(p => p.FAQs)
                                  .Where(p => p.Id == id)
                                  .FirstOrDefault();
 
@@ -487,6 +500,37 @@ namespace Proiect_DAW_2025.Controllers {
 
                 return View(product);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AskAI(int productId, string question)
+        {
+            if (string.IsNullOrWhiteSpace(question))
+            {
+                return RedirectToAction("Show", new { id = productId });
+            }
+
+            var product = await db.Products
+                .Include(p => p.FAQs)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (product == null) return NotFound();
+
+            string answer = await _assistantService.GetAnswerAsync(product, question);
+
+            var newFaq = new FAQ
+            {
+                ProductId = productId,
+                Text = question,
+                Answer = answer
+            };
+
+            db.FAQs.Add(newFaq);
+            await db.SaveChangesAsync();
+
+            TempData["AiMessage"] = "Asistentul a răspuns la întrebarea ta!";
+
+            return RedirectToAction("Show", new { id = productId });
         }
 
         [NonAction]
