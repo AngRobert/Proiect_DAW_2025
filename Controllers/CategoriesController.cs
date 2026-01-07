@@ -126,8 +126,6 @@ namespace Proiect_DAW_2025.Controllers
             Category? category = db.Categories
                                    .Include(c => c.Products)
                                         .ThenInclude(p => p.Reviews)
-                                   .Include(c => c.Products)
-                                        .ThenInclude(p => p.FAQs)
                                    .Where(c => c.Id == id)
                                    .FirstOrDefault();
 

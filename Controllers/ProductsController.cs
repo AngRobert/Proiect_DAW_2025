@@ -481,12 +481,13 @@ namespace Proiect_DAW_2025.Controllers {
             else
             {
                 Product? product = db.Products
-                                .Include(a => a.Category)
-                                .Include(a => a.Reviews)
-                                   .ThenInclude(c => c.User)
-                                 .Include(a => a.Collaborator)
-                                .Where(product => product.Id == review.ProductId)
-                                .FirstOrDefault();
+                                 .Include(p => p.Category)
+                                 .Include(p => p.Collaborator)
+                                 .Include(p => p.Reviews)
+                                    .ThenInclude(r => r.User)
+                                 .Include(p => p.FAQs)
+                                 .Where(product => product.Id == review.ProductId)
+                                 .FirstOrDefault();
 
                 if (product is null)
                 {
