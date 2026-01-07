@@ -467,8 +467,10 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             review.Date = DateTime.Now;
-
             review.UserId = _userManager.GetUserId(User);
+
+            ModelState.Remove(nameof(Review.UserId));
+            ModelState.Remove(nameof(Review.Date));
 
             if (ModelState.IsValid)
             {

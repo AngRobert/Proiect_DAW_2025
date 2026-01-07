@@ -269,6 +269,8 @@
 
                         <form asp-action="Show" asp-controller="Products" method="post">
 
+                            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
                             <input type="hidden" name="ProductId" value="@Model.Id" />
 
                             <div class="mb-3">
