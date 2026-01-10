@@ -6,6 +6,7 @@ using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
 
 namespace Proiect_DAW_2025.Controllers {
+    [Authorize]
     public class CartController : Controller {
 
         private readonly ApplicationDbContext db;

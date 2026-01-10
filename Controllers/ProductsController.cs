@@ -505,6 +505,7 @@ namespace Proiect_DAW_2025.Controllers {
             }
         }
 
+        [Authorize(Roles = "User, Colaborator, Admin")]
         [HttpPost]
         public async Task<IActionResult> AskAI(int productId, string question)
         {
