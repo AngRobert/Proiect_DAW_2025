@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,8 @@ using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
 
 namespace Proiect_DAW_2025.Controllers {
+
+    [Authorize]
     public class OrdersController : Controller {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;

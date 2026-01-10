@@ -505,10 +505,16 @@ namespace Proiect_DAW_2025.Controllers {
             }
         }
 
-        [Authorize(Roles = "User, Colaborator, Admin")]
         [HttpPost]
         public async Task<IActionResult> AskAI(int productId, string question)
         {
+            if (!User.Identity.IsAuthenticated) {
+                TempData["infoMessage"] = "Pentru a continua, autentifică-te sau creează un cont";
+                TempData["messageType"] = "alert-info";
+
+                return Redirect("/Identity/Account/Login?ReturnUrl=/Products/Show/" + productId);
+            }
+
             if (string.IsNullOrWhiteSpace(question))
             {
                 return RedirectToAction("Show", new { id = productId });
