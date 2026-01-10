@@ -31,7 +31,9 @@
             <div class="col-md-3">
                 <label class="form-label">📦 Status produs</label>
                 <select class="form-select" name="status" onchange="this.form.submit()">
-                    <option value="">-- Toate --</option>
+                    <option value="aprobat" selected="@(ViewBag.Status == "aprobat")"> 
+                        Aprobat 
+                    </option>
                     <option value="asteptare" selected="@(ViewBag.Status == "asteptare")">
                         În așteptare
                     </option>

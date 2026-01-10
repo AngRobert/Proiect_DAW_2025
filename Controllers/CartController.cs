@@ -6,6 +6,7 @@ using Proiect_DAW_2025.Data;
 using Proiect_DAW_2025.Models;
 
 namespace Proiect_DAW_2025.Controllers {
+    [Authorize]
     public class CartController : Controller {
 
         private readonly ApplicationDbContext db;
@@ -21,7 +22,15 @@ namespace Proiect_DAW_2025.Controllers {
             _roleManager = roleManager;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index() {
+
+            if (!User.Identity.IsAuthenticated) {
+                TempData["infoMessage"] = "Pentru a continua, autentifică-te sau creează un cont";
+                TempData["messageType"] = "alert-info";
+
+                return Redirect("/Identity/Account/Login?ReturnUrl=/Cart/Index/");
+            }
             var userId = _userManager.GetUserId(User);
 
             var cartItems = await db.ShoppingCartItems.Where(c => c.UserId == userId).Include(c => c.Product).ToListAsync();

@@ -19,8 +19,17 @@ namespace Proiect_DAW_2025.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+
+            if (!User.Identity.IsAuthenticated) {
+                TempData["infoMessage"] = "Pentru a continua, autentifică-te sau creează un cont";
+                TempData["messageType"] = "alert-info";
+
+                return Redirect("/Identity/Account/Login?ReturnUrl=/Wishlist/Index/");
+            }
+
             var userId = _userManager.GetUserId(User);
 
             var wishlistItems = await db.WishlistItems
