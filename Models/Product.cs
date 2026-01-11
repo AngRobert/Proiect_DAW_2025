@@ -20,11 +20,11 @@ namespace Proiect_DAW_2025.Models
         [Required(ErrorMessage = "Prețul este obligatoriu")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Prețul trebuie să fie mai mare ca 0")]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         [Required(ErrorMessage = "Stocul este obligatoriu")]
         [Range(0, int.MaxValue, ErrorMessage = "Stocul nu poate fi negativ")]
-        public int Stock { get; set; }
+        public int? Stock { get; set; }
 
         [Required(ErrorMessage = "Categoria este obligatorie")]
         public int? CategoryId { get; set; }
