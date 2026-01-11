@@ -7,11 +7,11 @@
 <div class="container my-4">
 
     @if (ViewBag.Message != null) {
-
         <div class="alert @ViewBag.Alert" role="alert">
             @ViewBag.Message
         </div>
     }
+
     <div class="row">
         <div class="col-md-5 text-center">
             <div class="product-image-wrapper">
@@ -20,20 +20,16 @@
                      alt="@Model.Title" />
             </div>
 
-
-        <br />
+            <br />
 
             <div class="text-start">
                 @if (Model.Stock > 0) {
-                    @if (Model.Stock <= 3)
-                    {
-                        <span class="badge bg-success mb-2">În stoc : Rămase @Model.Stock </span>
+                    if (Model.Stock <= 3) {
+                        <span class="badge bg-success mb-2">În stoc : Rămase @Model.Stock</span>
                     }
-                    else
-                    {
+                    else {
                         <span class="badge bg-success mb-2">În stoc</span>
                     }
-
                 }
                 else {
                     <span class="badge bg-danger mb-2">Stoc epuizat</span>
@@ -41,124 +37,118 @@
             </div>
         </div>
 
-        
+        <div class="col-md-7">
 
-        <div class="col-md-7 position-relative">
+            <!-- ===== HEADER (Title + Category + Admin buttons) ===== -->
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
 
-            @if (User.IsInRole("Admin") ||
-                        (User.IsInRole("Colaborator") &&
-                        Model.CollaboratorId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)) {
-
-                <div class="position-absolute top-0 end-0 d-flex flex-column gap-2">
-
-                    @if (User.IsInRole("Admin")) {
-                        @if (Model.Status == "asteptare") {
-                            <form asp-controller="Products"
-                                  asp-action="Approve"
-                                  asp-route-id="@Model.Id"
-                                  method="post">
-                                <input type="hidden" name="returnUrl"
-                                       value="@returnUrl" />
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    ✔ Aprobă
-                                </button>
-                            </form>
-
-                            <button type="button" "class="btn btn-danger btn-sm w-100"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#rejectModal-@Model.Id">
-                                ✖ Respinge
-                            </button>
-
-                            <div class="modal fade" id="rejectModal-@Model.Id" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-
-                                        <form asp-controller="Products"
-                                              asp-action="Reject"
-                                              method="post">
-
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Respinge produs</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <input type="hidden" name="id" value="@Model.Id" />
-                                                <input type="hidden" name="returnUrl" value="@returnUrl" />
-
-                                                <textarea name="adminFeedback"
-                                              class="form-control"
-                                              rows="4"
-                                              placeholder="Motivul respingerii..."
-                                              required></textarea>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button type="button"
-                                                        class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">
-                                                    Anulează
-                                                </button>
-
-                                                <button type="submit"
-                                                        class="btn btn-danger">
-                                                    Trimite
-                                                </button>
-
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        }
-                        else if (Model.Status == "respins") {
-                            <form asp-controller="Products"
-                                  asp-action="Approve"
-                                  asp-route-id="@Model.Id"
-                                  method="post">
-                                <input type="hidden" name="returnUrl"
-                                       value="@returnUrl" />
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    ✔ Aprobă
-                                </button>
-                            </form>
-                        }
-                    }
-
-                    <a asp-controller="Products"
-                       asp-action="Edit"
-                       asp-route-id="@Model.Id"
-                       class="btn btn-outline-secondary btn-sm">
-                        ✏️ Editează produs
-                    </a>
-
-                    <form method="post"
-                          asp-controller="Products"
-                          asp-action="Delete"
-                          asp-route-id="@Model.Id">
-                        <button type="submit"
-                                class="btn btn-outline-danger btn-sm">
-                            🗑️ Șterge produs
-                        </button>
-                    </form>
-
+                <div class="me-3">
+                    <h2 class="fw-bold break-word">@Model.Title</h2>
+                    <div><i class="bi bi-globe"></i> @Model.Category.CategoryName</div>
                 </div>
 
-            }
+                @if (User.IsInRole("Admin") ||
+                                (User.IsInRole("Colaborator") &&
+                                Model.CollaboratorId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)) {
+                    <div class="d-flex flex-column gap-2">
 
-            <h2 class="fw-bold">@Model.Title</h2>
+                        @if (User.IsInRole("Admin")) {
+                            if (Model.Status == "asteptare") {
+                                <form asp-controller="Products"
+                                      asp-action="Approve"
+                                      asp-route-id="@Model.Id"
+                                      method="post">
+                                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                        ✔ Aprobă
+                                    </button>
+                                </form>
 
-            <div><i class="bi bi-globe"></i> @Model.Category.CategoryName</div>
+                                <button type="button" class="btn btn-danger btn-sm w-100"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#rejectModal-@Model.Id">
+                                    ✖ Respinge
+                                </button>
 
-            <br />
+                                <div class="modal fade" id="rejectModal-@Model.Id" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
 
-            @if (User.Identity.IsAuthenticated)
-            {
+                                            <form asp-controller="Products"
+                                                  asp-action="Reject"
+                                                  method="post">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Respinge produs</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="id" value="@Model.Id" />
+                                                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                                                    <textarea name="adminFeedback"
+                                                  class="form-control"
+                                                  rows="4"
+                                                  placeholder="Motivul respingerii..."
+                                                  required></textarea>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                            class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Anulează
+                                                    </button>
+
+                                                    <button type="submit"
+                                                            class="btn btn-danger">
+                                                        Trimite
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.Status == "respins") {
+                                <form asp-controller="Products"
+                                      asp-action="Approve"
+                                      asp-route-id="@Model.Id"
+                                      method="post">
+                                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                        ✔ Aprobă
+                                    </button>
+                                </form>
+                            }
+                        }
+
+                        <a asp-controller="Products"
+                           asp-action="Edit"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-secondary btn-sm w-100">
+                            ✏️ Editează produs
+                        </a>
+
+                        <form method="post"
+                              asp-controller="Products"
+                              asp-action="Delete"
+                              asp-route-id="@Model.Id">
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-sm w-100">
+                                🗑️ Șterge produs
+                            </button>
+                        </form>
+
+                    </div>
+                }
+
+            </div>
+            <!-- ===== END HEADER ===== -->
+            @if (User.Identity.IsAuthenticated) {
                 <div class="mb-2 text-warning">
                     Scor: @Model.Rating
                 </div>
@@ -174,7 +164,7 @@
                       asp-controller="Cart"
                       asp-action="Add"
                       asp-route-id="@Model.Id">
-                      <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
                     <button class="btn btn-primary px-4" @(Model.Stock == 0 ? "disabled" : "")>
                         🛒 Adaugă în coș
                     </button>
@@ -206,9 +196,7 @@
                     @rev.User.UserName
                 </small>
 
-
-                @if (rev.Rating > 0)
-                {
+                @if (rev.Rating > 0) {
                     <p class="mb-1 fw-bold">
                         Rating: @rev.Rating
                     </p>
@@ -222,87 +210,33 @@
                     @rev.Date.ToString("dd MMM yyyy HH:mm")
                 </small>
 
-                <br />
-                <br />
+                <br /><br />
 
                 @if (User.IsInRole("Admin") ||
-                          rev.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
-                {
-
+                        rev.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value) {
                     <a asp-controller="Reviews"
-                    asp-action="Edit"
-                    asp-route-id="@rev.Id"
-                    class="btn btn-outline-secondary btn-sm">
+                       asp-action="Edit"
+                       asp-route-id="@rev.Id"
+                       class="btn btn-outline-secondary btn-sm">
                         ✏️ Editează recenzia
                     </a>
 
                     <form method="post"
-                    asp-controller="Reviews"
-                      asp-action="Delete"
+                          asp-controller="Reviews"
+                          asp-action="Delete"
                           asp-route-id="@rev.Id">
-                    <button type="submit"
-                            class="btn btn-outline-danger btn-sm">
+                        <button type="submit"
+                                class="btn btn-outline-danger btn-sm">
                             🗑️ Șterge recenzia
-                    </button>
+                        </button>
                     </form>
                 }
-
             </div>
         }
     }
     else {
         <p class="text-muted">Nu există nicio recenzie încă.</p>
     }
-
-
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-
-            <div class="col-md-8 col-lg-6">
-
-                <div class="card shadow-sm">
-                    <div class="card-body">
-
-                        <h3 class="card-title mb-4 text-center">
-                            Adaugă o recenzie
-                        </h3>
-
-                        <form asp-action="Show" asp-controller="Products" method="post">
-
-                            <div asp-validation-summary="All" class="text-danger mb-2"></div>
-
-                            <input type="hidden" name="ProductId" value="@Model.Id" />
-
-                            <div class="mb-3">
-                                <label class="form-label"> Text recenzie </label>
-                                <textarea class="form-control" rows="4" name="Text">@ViewBag.DraftText</textarea>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label"> Rating </label>
-                                <input class="form-control" type="number" name="Rating" value="@ViewBag.DraftRating" />
-                                <span asp-validation-for="Rating" class="text-danger"></span>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <a asp-action="Index" class="btn btn-outline-secondary">
-                                    Anulează
-                                </a>
-
-                                <button type="submit" class="btn btn-primary px-4">
-                                    Adaugă
-                                </button>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
 
     <hr />
 
@@ -320,61 +254,4 @@
         <p class="text-muted">Nu există nicio întrebare încă.</p>
     }
 
-</div>
-
-<button class="btn btn-info position-fixed bottom-0 end-0 m-4 rounded-circle p-3 shadow"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#aiChat"
-        style="z-index: 1000;">
-    🤖 AI
-</button>
-
-<div class="offcanvas offcanvas-end" tabindex="-1" id="aiChat" aria-labelledby="aiChatLabel">
-    <div class="offcanvas-header bg-info text-white">
-        <h5 class="offcanvas-title" id="aiChatLabel">Product Assistant 🤖</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body d-flex flex-column">
-
-        @if (ViewBag.AiMessage != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @ViewBag.AiMessage
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-
-        <div class="alert alert-light border">
-            Salut! Sunt asistentul tău virtual. Întreabă-mă orice despre <strong>@Model.Title</strong>!
-            <br>
-            <small class="text-muted">Ex: "Are garanție?", "Este potrivit pentru copii?"</small>
-        </div>
-
-        <div class="flex-grow-1 overflow-auto mb-3">
-            @if (Model.FAQs != null)
-            {
-                foreach (var faq in Model.FAQs.OrderByDescending(f => f.Id).Take(5))
-                {
-                    <div class="d-flex flex-column mb-3">
-                        <div class="align-self-end bg-primary text-white p-2 rounded mb-1" style="max-width: 80%;">
-                            @faq.Text
-                        </div>
-                        <div class="align-self-start bg-light border p-2 rounded" style="max-width: 80%;">
-                            @faq.Answer
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-
-        <form asp-controller="Products" asp-action="AskAI" method="post" class="mt-auto">
-            <input type="hidden" name="productId" value="@Model.Id" />
-            <div class="input-group">
-                <input type="text" name="question" class="form-control" placeholder="Întreabă aici..." required>
-                <button class="btn btn-primary" type="button" onclick="this.form.submit()">Trimite</button>
-            </div>
-        </form>
-
-    </div>
 </div>
