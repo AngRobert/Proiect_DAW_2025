@@ -48,8 +48,8 @@ namespace Proiect_DAW_2025.Controllers {
 
             foreach (var item in items) {
                 if (item.Product.Stock < item.Quantity) {
-                    stockErrors.Add("Produsul cu titlul " + item.Product.Title + " nu mai are decat " +
-                        item.Product.Stock + " stoc! Ajustati cantitatea corespunzator!");
+                    stockErrors.Add("Produsul cu titlul " + item.Product.Title + " nu mai are decât " +
+                        item.Product.Stock + " stoc! Ajustați cantitatea corespunzător!");
                 }
             }
 
@@ -60,7 +60,7 @@ namespace Proiect_DAW_2025.Controllers {
             }
 
             foreach (var item in items) {
-                total = total + (item.Product.Price * item.Quantity);
+                total = total + ((item.Product.Price ?? 0) * item.Quantity);
             }
 
             var order = new Order { 
@@ -89,7 +89,7 @@ namespace Proiect_DAW_2025.Controllers {
 
             await db.SaveChangesAsync();
 
-            TempData["message"] = "Comanda a fost plasata cu succes!";
+            TempData["message"] = "Comanda a fost plasată cu succes!";
             TempData["messageType"] = "alert-success";
             return RedirectToAction("Index");
         }
