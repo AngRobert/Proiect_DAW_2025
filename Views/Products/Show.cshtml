@@ -235,7 +235,57 @@
         <p class="text-muted">Nu există nicio recenzie încă.</p>
     }
 
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+
+            <div class="col-md-8 col-lg-6">
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+
+                        <h3 class="card-title mb-4 text-center">
+                            Adaugă o recenzie
+                        </h3>
+
+                        <form asp-action="Show" asp-controller="Products" method="post">
+
+                            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+                            <input type="hidden" name="ProductId" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label class="form-label"> Text recenzie </label>
+                                <textarea class="form-control" rows="4" name="Text">@ViewBag.DraftText</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"> Rating </label>
+                                <input class="form-control" type="number" name="Rating" value="@ViewBag.DraftRating" />
+                                <span asp-validation-for="Rating" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    Anulează
+                                </a>
+
+                                <button type="submit" class="btn btn-primary px-4">
+                                    Adaugă
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <hr />
+
 
     <h5>FAQ</h5>
 
@@ -251,4 +301,61 @@
         <p class="text-muted">Nu există nicio întrebare încă.</p>
     }
 
+</div>
+
+<button class="btn btn-info position-fixed bottom-0 end-0 m-4 rounded-circle p-3 shadow"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#aiChat"
+        style="z-index: 1000;">
+    🤖 AI
+</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="aiChat" aria-labelledby="aiChatLabel">
+    <div class="offcanvas-header bg-info text-white">
+        <h5 class="offcanvas-title" id="aiChatLabel">Product Assistant 🤖</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+
+        @if (ViewBag.AiMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.AiMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="alert alert-light border">
+            Salut! Sunt asistentul tău virtual. Întreabă-mă orice despre <strong>@Model.Title</strong>!
+            <br>
+            <small class="text-muted">Ex: "Are garanție?", "Este potrivit pentru copii?"</small>
+        </div>
+
+        <div class="flex-grow-1 overflow-auto mb-3">
+            @if (Model.FAQs != null)
+            {
+                foreach (var faq in Model.FAQs.OrderByDescending(f => f.Id).Take(5))
+                {
+                    <div class="d-flex flex-column mb-3">
+                        <div class="align-self-end bg-primary text-white p-2 rounded mb-1" style="max-width: 80%;">
+                            @faq.Text
+                        </div>
+                        <div class="align-self-start bg-light border p-2 rounded" style="max-width: 80%;">
+                            @faq.Answer
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <form asp-controller="Products" asp-action="AskAI" method="post" class="mt-auto">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <div class="input-group">
+                <input type="text" name="question" class="form-control" placeholder="Întreabă aici..." required>
+                <button class="btn btn-primary" type="button" onclick="this.form.submit()">Trimite</button>
+            </div>
+        </form>
+
+    </div>
 </div>

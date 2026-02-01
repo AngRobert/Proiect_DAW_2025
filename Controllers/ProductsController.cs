@@ -472,6 +472,11 @@ namespace Proiect_DAW_2025.Controllers {
             ModelState.Remove(nameof(Review.UserId));
             ModelState.Remove(nameof(Review.Date));
 
+            if (string.IsNullOrWhiteSpace(review.Text) && review.Rating == null)
+            {
+                ModelState.AddModelError("Text", "Recenzia trebuie să conțină fie un text, fie un rating (sau ambele).");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Reviews.Add(review);
