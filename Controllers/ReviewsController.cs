@@ -89,6 +89,11 @@ namespace Proiect_DAW_2025.Controllers
                 if (rev.UserId == _userManager.GetUserId(User)
                         || User.IsInRole("Admin"))
                 {
+                    if (string.IsNullOrWhiteSpace(requestReview.Text) && requestReview.Rating == null)
+                    {
+                        ModelState.AddModelError("Text", "Recenzia trebuie să conțină fie un text, fie un rating (sau ambele).");
+                    }
+
                     if (ModelState.IsValid)
                     {
 

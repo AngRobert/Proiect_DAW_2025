@@ -16,7 +16,7 @@ namespace Proiect_DAW_2025.Models
 
         public int ProductId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public virtual ApplicationUser? User { get; set; }
 
